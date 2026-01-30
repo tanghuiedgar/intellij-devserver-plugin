@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.utils
@@ -70,5 +71,11 @@ public class JTreeUtil {
             expandNode(tree, path.pathByAddingChild(child));
         }
         tree.expandPath(path);
+    }
+
+    public static boolean hasChildren(@NotNull JTree tree, @NotNull TreePath path) {
+        Object node = path.getLastPathComponent();
+        TreeModel model = tree.getModel();
+        return !model.isLeaf(node);
     }
 }

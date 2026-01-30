@@ -9,6 +9,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import lombok.Getter;
 
 import javax.swing.JComponent;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.util.*;
 
@@ -22,6 +23,10 @@ public class ExecuteLeftComponent {
 
     public ExecuteLeftComponent(Project project) {
         this.project = project;
+        // 设置只能单选
+        this.commandTree.getSelectionModel().setSelectionMode(
+                TreeSelectionModel.SINGLE_TREE_SELECTION
+        );
     }
 
 

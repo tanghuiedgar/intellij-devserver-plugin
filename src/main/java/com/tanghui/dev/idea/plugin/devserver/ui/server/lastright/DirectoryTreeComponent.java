@@ -10,6 +10,7 @@ import com.tanghui.dev.idea.plugin.devserver.renderer.ServerHostTreeCellRenderer
 import lombok.Getter;
 
 import javax.swing.JComponent;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 
 @Getter
@@ -21,7 +22,11 @@ public class DirectoryTreeComponent {
 
     public DirectoryTreeComponent(Project project) {
         this.project = project;
-        serverDirectoryTree.setCellRenderer(new ServerHostTreeCellRenderer());
+        this.serverDirectoryTree.setCellRenderer(new ServerHostTreeCellRenderer());
+        // 设置只能单选
+        this.serverDirectoryTree.getSelectionModel().setSelectionMode(
+                TreeSelectionModel.SINGLE_TREE_SELECTION
+        );
     }
 
     {

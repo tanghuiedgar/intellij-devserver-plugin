@@ -9,6 +9,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import lombok.Getter;
 
 import javax.swing.JComponent;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 
 
@@ -28,6 +29,10 @@ public class LastLeftComponent {
 
     public LastLeftComponent(Project project) {
         this.project = project;
+        // 设置只能单选
+        this.serverTree.getSelectionModel().setSelectionMode(
+                TreeSelectionModel.SINGLE_TREE_SELECTION
+        );
     }
 
     {

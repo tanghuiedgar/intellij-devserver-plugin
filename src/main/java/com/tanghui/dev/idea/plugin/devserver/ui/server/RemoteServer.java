@@ -244,23 +244,26 @@ public class RemoteServer implements Disposable {
     }
 
     public void initCommandInfo(JTree serverHostTree, Tree commandTree) {
-        JSONObject executeJsonObject = getSelectedCommandJson(serverHostTree, commandTree);
-        if (executeJsonObject != null) {
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            JSONObject executeJsonObject = getSelectedCommandJson(serverHostTree, commandTree);
             ExecuteRightComponent executeRight = lastRight.getExecuteRight();
-            executeRight.getDirectoryTextField().setText(executeJsonObject.getString("directory"));
-            executeRight.getUserTextField().setText(executeJsonObject.getString("user"));
-            executeRight.getIllustrateTextPane().setText(executeJsonObject.getString("illustrate"));
-            executeRight.getExecuteCommand().setText(executeJsonObject.getString("executeCommand"));
-            Boolean script = executeJsonObject.getBoolean("scriptType");
-            executeRight.getScriptType().setSelected(script != null && script);
-        } else {
-            ExecuteRightComponent executeRight = lastRight.getExecuteRight();
-            executeRight.getDirectoryTextField().setText(executeJsonObject.getString("directory"));
-            executeRight.getUserTextField().setText(executeJsonObject.getString("user"));
-            executeRight.getIllustrateTextPane().setText("");
-            executeRight.getExecuteCommand().setText("");
-            executeRight.getScriptType().setSelected(false);
-        }
+            if (executeJsonObject != null) {
+                executeRight.getDirectoryTextField().setText(executeJsonObject.getString("directory"));
+                executeRight.getUserTextField().setText(executeJsonObject.getString("user"));
+                executeRight.getIllustrateTextPane().setText(executeJsonObject.getString("illustrate"));
+                executeRight.getExecuteCommand().setText(executeJsonObject.getString("executeCommand"));
+                Boolean script = executeJsonObject.getBoolean("scriptType");
+                executeRight.getScriptType().setSelected(script != null && script);
+            } else {
+                executeRight.getDirectoryTextField().setText("");
+                executeRight.getUserTextField().setText("");
+                executeRight.getIllustrateTextPane().setText("");
+                executeRight.getExecuteCommand().setText("");
+                executeRight.getScriptType().setSelected(false);
+            }
+            executeRight.getRoot().revalidate();
+            executeRight.getRoot().repaint();
+        });
     }
 
 
@@ -616,6 +619,27 @@ public class RemoteServer implements Disposable {
                     }
                 }
             }
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = lastLeft.getServerTree().getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(lastLeft.getServerTree(), sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
+                    }
+                }
+            }
+
         });
         consoleActions.add(new AnAction("折叠", "", DevServerIcons.DevServer_COLLAPSE_DARK) {
             @Override
@@ -630,6 +654,27 @@ public class RemoteServer implements Disposable {
                         collapseAllExceptRoot(lastLeft.getServerTree());
                     } else {
                         collapseDeep(lastLeft.getServerTree(), sel);
+                    }
+                }
+            }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = lastLeft.getServerTree().getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(lastLeft.getServerTree(), sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
                     }
                 }
             }
@@ -1563,6 +1608,27 @@ public class RemoteServer implements Disposable {
                     }
                 }
             }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = commandTree.getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(commandTree, sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
+                    }
+                }
+            }
         });
         consoleActions.add(new AnAction("折叠", "", DevServerIcons.DevServer_COLLAPSE_DARK) {
             @Override
@@ -1577,6 +1643,27 @@ public class RemoteServer implements Disposable {
                         collapseAllExceptRoot(commandTree);
                     } else {
                         collapseDeep(commandTree, sel);
+                    }
+                }
+            }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = commandTree.getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(commandTree, sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
                     }
                 }
             }
