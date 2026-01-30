@@ -57,6 +57,10 @@ dependencies {
     implementation(libs.flexmark.tables)
     implementation(libs.flexmark.math)
 
+    // 测试
+    testImplementation(libs.junit)
+    testImplementation(libs.opentest4j)
+
     intellijPlatform {
         this.create(
             providers.gradleProperty("platformType"),

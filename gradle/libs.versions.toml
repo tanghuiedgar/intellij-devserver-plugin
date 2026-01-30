@@ -1,10 +1,13 @@
 [versions]
 # plugins
 changelog = "2.5.0"
-intelliJPlatform = "2.10.5"
+intelliJPlatform = "2.11.0"
 kotlin = "2.3.0"
 kover = "0.9.4"
 qodana = "2025.2.4"
+
+junit = "4.13.2"
+opentest4j="1.3.0"
 
 commonsLang3 = "3.19.0"
 fastjson = "1.2.83"
@@ -25,6 +28,9 @@ commons-pool2 = { group = "org.apache.commons", name = "commons-pool2", version.
 
 flexmark-tables = { group = "com.vladsch.flexmark", name = "flexmark-ext-tables", version.ref = "flexmark" }
 flexmark-math = { group = "tech.catheu", name = "flexmark-ext-math", version.ref = "flexmarkMath" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+opentest4j = { group = "org.opentest4j", name = "opentest4j", version.ref = "opentest4j" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }

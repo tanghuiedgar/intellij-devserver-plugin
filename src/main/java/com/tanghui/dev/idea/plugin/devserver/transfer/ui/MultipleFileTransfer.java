@@ -8,6 +8,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.util.ui.JBUI;
 import lombok.Getter;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -69,7 +70,7 @@ public class MultipleFileTransfer {
 
             @Override
             public Dimension getPreferredSize(JComponent c) {
-                return new Dimension(8, super.getPreferredSize(c).height); // 宽度=8px
+                return JBUI.size(8, super.getPreferredSize(c).height); // 宽度=8px
             }
         });
         this.uploadScrollPane.getVerticalScrollBar().setUnitIncrement(20);

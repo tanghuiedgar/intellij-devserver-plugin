@@ -62,7 +62,7 @@ public class DevServerTable {
         devServerTableComponent.setRowHeight(35); // 每行高度 35 像素
         devServerTableComponent.setDefaultRenderer(Object.class, new TableViewRenderer());
         float scale = JBUI.pixScale();
-        Dimension preferredSize = new Dimension(0, (int) (30 * scale));
+        Dimension preferredSize = JBUI.size(0, (int) (30 * scale));
         headComponent.setPreferredSize(preferredSize);
     }
 
@@ -135,8 +135,8 @@ public class DevServerTable {
         root.setLayout(new BorderLayout(0, 0));
         headComponent = new JBPanel();
         headComponent.setLayout(new BorderLayout(0, 0));
-        headComponent.setMinimumSize(new Dimension(0, 30));
-        headComponent.setPreferredSize(new Dimension(0, 30));
+        headComponent.setMinimumSize(JBUI.size(0, 30));
+        headComponent.setPreferredSize(JBUI.size(0, 30));
         root.add(headComponent, BorderLayout.NORTH);
         tableComponent = new JBPanel();
         tableComponent.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

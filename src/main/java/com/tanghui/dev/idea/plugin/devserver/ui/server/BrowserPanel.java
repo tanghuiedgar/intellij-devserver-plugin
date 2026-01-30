@@ -8,6 +8,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
@@ -16,6 +17,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
+import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons;
 import com.tanghui.dev.idea.plugin.devserver.ui.HorizontalScrollBarEditor;
@@ -90,7 +92,7 @@ public class BrowserPanel {
         PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("logeText.md", fileType, "");
         Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
         this.serverInfo = new HorizontalScrollBarEditor(document, project, fileType, false, false);
-        this.serverInfo.setFont(new Font("Monaco", Font.BOLD, 14));
+        this.serverInfo.setFont(EditorUtil.getEditorFont());
         this.serverInfo.setText(markdownContent);
         serverInfo.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -316,7 +318,7 @@ public class BrowserPanel {
 
         panel.add(buttons, BorderLayout.WEST);
 
-        urlField.setPreferredSize(new Dimension(-1, 30));
+        urlField.setPreferredSize(JBUI.size(-1, 30));
 
         JPanel jPanel = new JPanel(new BorderLayout());
         JPanel centerWrapper = new JPanel(new GridBagLayout());

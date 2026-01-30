@@ -6,9 +6,11 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.util.ui.JBUI;
 import lombok.Getter;
 
 import javax.swing.JComponent;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 
 
@@ -28,6 +30,10 @@ public class LastLeftComponent {
 
     public LastLeftComponent(Project project) {
         this.project = project;
+        // 设置只能单选
+        this.serverTree.getSelectionModel().setSelectionMode(
+                TreeSelectionModel.SINGLE_TREE_SELECTION
+        );
     }
 
     {
@@ -45,13 +51,13 @@ public class LastLeftComponent {
     private void $$$setupUI$$$() {
         root = new JBPanel();
         root.setLayout(new BorderLayout(0, 0));
-        root.setMaximumSize(new Dimension(2147483647, 2147483647));
-        root.setMinimumSize(new Dimension(300, 0));
-        root.setPreferredSize(new Dimension(300, -1));
+        root.setMaximumSize(JBUI.size(2147483647, 2147483647));
+        root.setMinimumSize(JBUI.size(300, 0));
+        root.setPreferredSize(JBUI.size(300, -1));
         serverOperateToolbar = new JBPanel();
         serverOperateToolbar.setLayout(new BorderLayout(0, 0));
-        serverOperateToolbar.setMinimumSize(new Dimension(-1, 30));
-        serverOperateToolbar.setPreferredSize(new Dimension(-1, 30));
+        serverOperateToolbar.setMinimumSize(JBUI.size(-1, 30));
+        serverOperateToolbar.setPreferredSize(JBUI.size(-1, 30));
         root.add(serverOperateToolbar, BorderLayout.NORTH);
         final JBPanel panel1 = new JBPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

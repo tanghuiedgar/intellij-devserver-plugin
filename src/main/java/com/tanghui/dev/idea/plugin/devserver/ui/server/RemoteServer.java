@@ -42,6 +42,7 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsListener;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.OperateEnum;
@@ -244,16 +245,26 @@ public class RemoteServer implements Disposable {
     }
 
     public void initCommandInfo(JTree serverHostTree, Tree commandTree) {
-        JSONObject executeJsonObject = getSelectedCommandJson(serverHostTree, commandTree);
-        if (executeJsonObject != null) {
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            JSONObject executeJsonObject = getSelectedCommandJson(serverHostTree, commandTree);
             ExecuteRightComponent executeRight = lastRight.getExecuteRight();
-            executeRight.getDirectoryTextField().setText(executeJsonObject.getString("directory"));
-            executeRight.getUserTextField().setText(executeJsonObject.getString("user"));
-            executeRight.getIllustrateTextPane().setText(executeJsonObject.getString("illustrate"));
-            executeRight.getExecuteCommand().setText(executeJsonObject.getString("executeCommand"));
-            Boolean script = executeJsonObject.getBoolean("scriptType");
-            executeRight.getScriptType().setSelected(script != null && script);
-        }
+            if (executeJsonObject != null) {
+                executeRight.getDirectoryTextField().setText(executeJsonObject.getString("directory"));
+                executeRight.getUserTextField().setText(executeJsonObject.getString("user"));
+                executeRight.getIllustrateTextPane().setText(executeJsonObject.getString("illustrate"));
+                executeRight.getExecuteCommand().setText(executeJsonObject.getString("executeCommand"));
+                Boolean script = executeJsonObject.getBoolean("scriptType");
+                executeRight.getScriptType().setSelected(script != null && script);
+            } else {
+                executeRight.getDirectoryTextField().setText("");
+                executeRight.getUserTextField().setText("");
+                executeRight.getIllustrateTextPane().setText("");
+                executeRight.getExecuteCommand().setText("");
+                executeRight.getScriptType().setSelected(false);
+            }
+            executeRight.getRoot().revalidate();
+            executeRight.getRoot().repaint();
+        });
     }
 
 
@@ -609,6 +620,27 @@ public class RemoteServer implements Disposable {
                     }
                 }
             }
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = lastLeft.getServerTree().getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(lastLeft.getServerTree(), sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
+                    }
+                }
+            }
+
         });
         consoleActions.add(new AnAction("折叠", "", DevServerIcons.DevServer_COLLAPSE_DARK) {
             @Override
@@ -623,6 +655,27 @@ public class RemoteServer implements Disposable {
                         collapseAllExceptRoot(lastLeft.getServerTree());
                     } else {
                         collapseDeep(lastLeft.getServerTree(), sel);
+                    }
+                }
+            }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = lastLeft.getServerTree().getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(lastLeft.getServerTree(), sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
                     }
                 }
             }
@@ -1379,23 +1432,23 @@ public class RemoteServer implements Disposable {
         fileTransfers.forEach((key, fileTransfer) -> {
             JComponent comp = fileTransfer.getRoot();
             // 固定高度
-            Dimension size = new Dimension(Integer.MAX_VALUE, rowHeight);
-            comp.setMinimumSize(new Dimension(0, rowHeight));
-            comp.setPreferredSize(new Dimension(0, rowHeight));
-            comp.setMaximumSize(new Dimension(Integer.MAX_VALUE, rowHeight));
+            Dimension size = JBUI.size(Integer.MAX_VALUE, rowHeight);
+            comp.setMinimumSize(JBUI.size(0, rowHeight));
+            comp.setPreferredSize(JBUI.size(0, rowHeight));
+            comp.setMaximumSize(JBUI.size(Integer.MAX_VALUE, rowHeight));
             comp.setAlignmentX(Component.LEFT_ALIGNMENT);
             // 添加组件
             panel.add(comp);
             // 上下间距
-            panel.add(Box.createRigidArea(new Dimension(0, spacing)));
+            panel.add(Box.createRigidArea(JBUI.size(0, spacing)));
             // 分割线
             JSeparator separator = new JSeparator();
-            separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+            separator.setMaximumSize(JBUI.size(Integer.MAX_VALUE, 1));
             separator.setForeground(JBColor.GRAY); // IntelliJ 风格
             panel.add(separator);
 
             // 分割线下间距
-            panel.add(Box.createRigidArea(new Dimension(0, spacing)));
+            panel.add(Box.createRigidArea(JBUI.size(0, spacing)));
         });
 
         panel.revalidate();
@@ -1427,7 +1480,7 @@ public class RemoteServer implements Disposable {
                 editCommand.showAndGet();
             }
         });
-        consoleActions.add(new AnAction("保存", "", DevServerIcons.DevServer_TOOLBAR_SAVE) {
+        consoleActions.add(new AnAction("保存", "", DevServerIcons.DevServer_SAVE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 获取脚本类型
@@ -1556,6 +1609,27 @@ public class RemoteServer implements Disposable {
                     }
                 }
             }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = commandTree.getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(commandTree, sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
+                    }
+                }
+            }
         });
         consoleActions.add(new AnAction("折叠", "", DevServerIcons.DevServer_COLLAPSE_DARK) {
             @Override
@@ -1570,6 +1644,27 @@ public class RemoteServer implements Disposable {
                         collapseAllExceptRoot(commandTree);
                     } else {
                         collapseDeep(commandTree, sel);
+                    }
+                }
+            }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
+            public void update(@NotNull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                TreePath sel = commandTree.getSelectionPath();
+                if (sel == null) {
+                    // 设置不显示
+                    presentation.setVisible(false);
+                } else {
+                    if (hasChildren(commandTree, sel)) {
+                        presentation.setVisible(true);
+                    } else {
+                        presentation.setVisible(false);
                     }
                 }
             }

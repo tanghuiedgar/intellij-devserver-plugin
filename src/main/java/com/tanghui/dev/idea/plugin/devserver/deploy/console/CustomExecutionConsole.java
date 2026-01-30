@@ -11,6 +11,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.components.JBTabbedPane;
+import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.deploy.run.DevServerRunConsoleView;
 import com.tanghui.dev.idea.plugin.devserver.settings.data.DevServerRunConfig;
@@ -50,7 +51,7 @@ public class CustomExecutionConsole implements ExecutionConsole {
     public void printHead(ConsoleView consoleView) {
         this.console.add(consoleView.getComponent(), BorderLayout.NORTH);
         this.console.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.AFTER_LAST_LINE);
-        this.console.setPreferredSize(new Dimension(0, 50));
+        this.console.setPreferredSize(JBUI.size(0, 50));
     }
 
 
@@ -69,7 +70,7 @@ public class CustomExecutionConsole implements ExecutionConsole {
             }
             JPanel jPanel = new JPanel(new BorderLayout());
             jPanel.add(actionToolbar.getComponent());
-            jPanel.setPreferredSize(new Dimension(40, 0));
+            jPanel.setPreferredSize(JBUI.size(40, 0));
             infoPanel.add(jPanel, BorderLayout.EAST);
             uploadTabbedPane.addTab(consoleView.getConfiguration().getServerHost(), infoPanel);
             uploadTabbedPane.updateUI();
@@ -79,7 +80,7 @@ public class CustomExecutionConsole implements ExecutionConsole {
     @NotNull
     private static JPanel createControlPanel(DevServerRunConsoleView runConsoleView) {
         JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        jPanel1.setPreferredSize(new Dimension(0, 40));
+        jPanel1.setPreferredSize(JBUI.size(0, 40));
         JButton logButton = runConsoleView.getLogButton();
 
         JButton rollbackButton = runConsoleView.getRollbackButton();
@@ -132,8 +133,8 @@ public class CustomExecutionConsole implements ExecutionConsole {
 
     public void addComponent(MultipleFileTransfer component) {
         JTabbedPane fileTransfer = component.getUploadTabbedPane();
-        component.getRoot().setPreferredSize(new Dimension(500, 0));
-        this.component.setPreferredSize(new Dimension(500, 0));
+        component.getRoot().setPreferredSize(JBUI.size(500, 0));
+        this.component.setPreferredSize(JBUI.size(500, 0));
         this.component.add(component.getRoot(), BorderLayout.CENTER);
         sync(fileTransfer, this.uploadTabbedPane);
     }

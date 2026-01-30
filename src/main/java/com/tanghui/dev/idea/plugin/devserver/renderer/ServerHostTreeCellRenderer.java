@@ -38,7 +38,8 @@ public class ServerHostTreeCellRenderer extends DefaultTreeCellRenderer {
         }
         super.selected = selected;
         super.hasFocus = hasFocus;
-        this.setBackground(new JBColor(new Color(0x1d2021), new Color(0x1d2021)));
+        // this.setBackground(new JBColor(new Color(0x1d2021), new Color(0x1d2021)));
+        this.setBackground(JBColor.background());
         return this;
     }
 
