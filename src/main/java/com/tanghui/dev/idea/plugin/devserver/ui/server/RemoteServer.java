@@ -253,6 +253,13 @@ public class RemoteServer implements Disposable {
             executeRight.getExecuteCommand().setText(executeJsonObject.getString("executeCommand"));
             Boolean script = executeJsonObject.getBoolean("scriptType");
             executeRight.getScriptType().setSelected(script != null && script);
+        } else {
+            ExecuteRightComponent executeRight = lastRight.getExecuteRight();
+            executeRight.getDirectoryTextField().setText(executeJsonObject.getString("directory"));
+            executeRight.getUserTextField().setText(executeJsonObject.getString("user"));
+            executeRight.getIllustrateTextPane().setText("");
+            executeRight.getExecuteCommand().setText("");
+            executeRight.getScriptType().setSelected(false);
         }
     }
 
@@ -1427,7 +1434,7 @@ public class RemoteServer implements Disposable {
                 editCommand.showAndGet();
             }
         });
-        consoleActions.add(new AnAction("保存", "", DevServerIcons.DevServer_TOOLBAR_SAVE) {
+        consoleActions.add(new AnAction("保存", "", DevServerIcons.DevServer_SAVE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 获取脚本类型
