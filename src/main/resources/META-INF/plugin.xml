@@ -1,0 +1,50 @@
+<!-- Plugin Configuration File: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN, cannot be changed between the plugin versions. -->
+    <id>intellij-devserver-plugin</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
+    <name>DevServer</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor url="https://github.com/tangedgar/intellij-devserver-plugin.git">TANG</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
+    <!--<description><![CDATA[
+        DevServer 是一款面向开发者的 IntelliJ IDEA 插件，旨在提供 一站式服务器开发与运维解决方案。<br>
+        <em>通过它，你可以直接在 IDE 中管理服务器、上传下载文件、远程终端操作、自动部署项目，极大提升开发与运维效率。</em>
+    ]]></description>-->
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.java</depends>
+    <depends>org.jetbrains.kotlin</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>Git4Idea</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+    <depends>com.intellij.modules.remoteServers</depends>
+    <depends>com.intellij.modules.ssh</depends>
+    <depends>com.intellij.gradle</depends>
+
+    <!-- Extensions defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="服务器" factoryClass="com.tanghui.dev.idea.plugin.devserver.factory.DevServerHostFactory" anchor="right"
+                    icon="com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons.DevServer_SERVER"/>
+
+        <configurationType implementation="com.tanghui.dev.idea.plugin.devserver.deploy.run.DevServerConfigurationType"/>
+
+        <notificationGroup
+                id="DevServer.Plugin.Notification"
+                displayType="BALLOON"
+                bundle="messages.DevServer"
+                key="DevServer.Plugin.Notifications"
+        />
+    </extensions>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportsK2="true" />
+    </extensions>
+</idea-plugin>

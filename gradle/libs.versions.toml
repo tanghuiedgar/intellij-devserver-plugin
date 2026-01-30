@@ -1,0 +1,34 @@
+[versions]
+# plugins
+changelog = "2.5.0"
+intelliJPlatform = "2.10.5"
+kotlin = "2.3.0"
+kover = "0.9.4"
+qodana = "2025.2.4"
+
+commonsLang3 = "3.19.0"
+fastjson = "1.2.83"
+lombok = "1.18.32"
+sshj = "0.40.0"
+commonsPool2 = "2.12.0"
+
+flexmark = "0.64.0"
+flexmarkMath = "0.8.0"
+
+[libraries]
+commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3" }
+fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjson" }
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
+sshj = { group = "com.hierynomus", name = "sshj", version.ref = "sshj" }
+commons-pool2 = { group = "org.apache.commons", name = "commons-pool2", version.ref = "commonsPool2" }
+
+flexmark-tables = { group = "com.vladsch.flexmark", name = "flexmark-ext-tables", version.ref = "flexmark" }
+flexmark-math = { group = "tech.catheu", name = "flexmark-ext-math", version.ref = "flexmarkMath" }
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+intelliJPlatform = { id = "org.jetbrains.intellij.platform", version.ref = "intelliJPlatform" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }

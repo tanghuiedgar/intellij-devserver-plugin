@@ -1,0 +1,6 @@
+# 所有文件的默认负责人
+*       @tangedgar
+
+# src 目录下所有文件由 tangedgar 负责
+/src/**  @tangedgar
+

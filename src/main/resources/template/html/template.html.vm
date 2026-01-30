@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        window.MathJax = {
+            tex: {
+                packages: {'[+]': ['ams']},
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <!-- Prism 核心 JS -->
+    #foreach($item in $jsPathList)
+        <script src="file:///${item}"></script>
+    #end
+    <!-- css -->
+    #foreach($item in $cssPathList)
+        <link rel="stylesheet" href="file:///${item}">
+    #end
+</head>
+<body>
+    ${content}
+</body>
+</html>
