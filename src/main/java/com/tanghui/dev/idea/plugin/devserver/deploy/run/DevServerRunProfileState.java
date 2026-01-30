@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.keyFMap.KeyFMap;
+import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.deploy.console.CustomExecutionConsole;
@@ -141,12 +142,12 @@ public class DevServerRunProfileState implements RunProfileState {
                     myConsoleView.getConsoleView().attachToProcess(myProcessHandler);
                     JButton logButton = new JButton();
                     logButton.setText("查看日志");
-                    logButton.setPreferredSize(new Dimension(80, 30));
+                    logButton.setPreferredSize(JBUI.size(80, 30));
                     logButton.setForeground(new JBColor(new Color(19, 218, 5), new Color(19, 218, 5)));
                     logButton.setBorder(null);
                     JButton rollbackButton = new JButton();
                     rollbackButton.setText("版本回退");
-                    rollbackButton.setPreferredSize(new Dimension(80, 30));
+                    rollbackButton.setPreferredSize(JBUI.size(80, 30));
                     rollbackButton.setForeground(new JBColor(new Color(255, 181, 30), new Color(255, 181, 30)));
                     rollbackButton.setBorder(null);
                     myConsoleView.setLogButton(logButton);
@@ -382,7 +383,7 @@ public class DevServerRunProfileState implements RunProfileState {
                                 fileTransfer.getStartOverButton().setEnabled(false);
                                 fileTransfer.getEndButton().setEnabled(false);
                                 fileTransfer.getTimeLeftLabel().setText("已终止");
-                                fileTransfer.getTimeLeftLabel().setFont(new Font("黑体", Font.BOLD, 16));
+                                fileTransfer.getTimeLeftLabel().setFont(JBUI.Fonts.label());
                                 fileTransfer.getTimeLeftLabel().setForeground(new JBColor(new Color(205, 5, 5), new Color(205, 5, 5)));
                             }
                         }
@@ -461,10 +462,10 @@ public class DevServerRunProfileState implements RunProfileState {
 
                     JButton logButton = new JButton();
                     logButton.setText("查看日志");
-                    logButton.setPreferredSize(new Dimension(80, 30));
+                    logButton.setPreferredSize(JBUI.size(80, 30));
                     JButton rollbackButton = new JButton();
                     rollbackButton.setText("版本回退");
-                    rollbackButton.setPreferredSize(new Dimension(80, 30));
+                    rollbackButton.setPreferredSize(JBUI.size(80, 30));
                     myConsoleView.setLogButton(logButton);
                     myConsoleView.setRollbackButton(rollbackButton);
                     logButton.setEnabled(false);

@@ -42,6 +42,7 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsListener;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.OperateEnum;
@@ -1431,23 +1432,23 @@ public class RemoteServer implements Disposable {
         fileTransfers.forEach((key, fileTransfer) -> {
             JComponent comp = fileTransfer.getRoot();
             // 固定高度
-            Dimension size = new Dimension(Integer.MAX_VALUE, rowHeight);
-            comp.setMinimumSize(new Dimension(0, rowHeight));
-            comp.setPreferredSize(new Dimension(0, rowHeight));
-            comp.setMaximumSize(new Dimension(Integer.MAX_VALUE, rowHeight));
+            Dimension size = JBUI.size(Integer.MAX_VALUE, rowHeight);
+            comp.setMinimumSize(JBUI.size(0, rowHeight));
+            comp.setPreferredSize(JBUI.size(0, rowHeight));
+            comp.setMaximumSize(JBUI.size(Integer.MAX_VALUE, rowHeight));
             comp.setAlignmentX(Component.LEFT_ALIGNMENT);
             // 添加组件
             panel.add(comp);
             // 上下间距
-            panel.add(Box.createRigidArea(new Dimension(0, spacing)));
+            panel.add(Box.createRigidArea(JBUI.size(0, spacing)));
             // 分割线
             JSeparator separator = new JSeparator();
-            separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+            separator.setMaximumSize(JBUI.size(Integer.MAX_VALUE, 1));
             separator.setForeground(JBColor.GRAY); // IntelliJ 风格
             panel.add(separator);
 
             // 分割线下间距
-            panel.add(Box.createRigidArea(new Dimension(0, spacing)));
+            panel.add(Box.createRigidArea(JBUI.size(0, spacing)));
         });
 
         panel.revalidate();

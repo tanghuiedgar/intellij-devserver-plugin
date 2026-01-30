@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.renderer.ServerHostTreeCellRenderer;
 import lombok.Getter;
 
@@ -44,13 +45,13 @@ public class DirectoryTreeComponent {
     private void $$$setupUI$$$() {
         root = new JBPanel();
         root.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        root.setMaximumSize(new Dimension(2147483647, 2147483647));
-        root.setMinimumSize(new Dimension(300, 24));
-        root.setPreferredSize(new Dimension(300, 24));
+        root.setMaximumSize(JBUI.size(2147483647, 2147483647));
+        root.setMinimumSize(JBUI.size(300, 24));
+        root.setPreferredSize(JBUI.size(300, 24));
         final JBScrollPane jBScrollPane1 = new JBScrollPane();
         root.add(jBScrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         serverDirectoryTree = new Tree();
-        serverDirectoryTree.setMinimumSize(new Dimension(0, 0));
+        serverDirectoryTree.setMinimumSize(JBUI.size(0, 0));
         jBScrollPane1.setViewportView(serverDirectoryTree);
     }
 

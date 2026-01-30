@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.util.ui.JBUI;
 import lombok.Getter;
 
 import javax.swing.JComponent;
@@ -45,12 +46,12 @@ public class ExecuteLeftComponent {
     private void $$$setupUI$$$() {
         root = new JBPanel();
         root.setLayout(new BorderLayout(0, 0));
-        root.setMinimumSize(new Dimension(300, 0));
-        root.setPreferredSize(new Dimension(300, 0));
+        root.setMinimumSize(JBUI.size(300, 0));
+        root.setPreferredSize(JBUI.size(300, 0));
         commandToolbar = new JBPanel();
         commandToolbar.setLayout(new BorderLayout(0, 0));
-        commandToolbar.setMinimumSize(new Dimension(24, 30));
-        commandToolbar.setPreferredSize(new Dimension(24, 30));
+        commandToolbar.setMinimumSize(JBUI.size(24, 30));
+        commandToolbar.setPreferredSize(JBUI.size(24, 30));
         root.add(commandToolbar, BorderLayout.NORTH);
         final JBPanel panel1 = new JBPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

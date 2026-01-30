@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostFileModel;
 import lombok.Getter;
 
@@ -43,8 +44,8 @@ public class DirectoryListComponent {
         root.setLayout(new BorderLayout(0, 0));
         serverFileOperationToolbar = new JBPanel();
         serverFileOperationToolbar.setLayout(new BorderLayout(0, 0));
-        serverFileOperationToolbar.setMinimumSize(new Dimension(0, 30));
-        serverFileOperationToolbar.setPreferredSize(new Dimension(0, 30));
+        serverFileOperationToolbar.setMinimumSize(JBUI.size(0, 30));
+        serverFileOperationToolbar.setPreferredSize(JBUI.size(0, 30));
         root.add(serverFileOperationToolbar, BorderLayout.NORTH);
         final JBScrollPane jBScrollPane1 = new JBScrollPane();
         root.add(jBScrollPane1, BorderLayout.CENTER);

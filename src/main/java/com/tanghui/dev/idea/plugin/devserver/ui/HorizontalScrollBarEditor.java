@@ -3,6 +3,7 @@ package com.tanghui.dev.idea.plugin.devserver.ui;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightVirtualFile;
@@ -25,7 +26,7 @@ public class HorizontalScrollBarEditor extends EditorTextField {
     public HorizontalScrollBarEditor(Document document, Project project, FileType fileType, boolean isViewer, boolean oneLineMode) {
         super(document, project, fileType, isViewer, oneLineMode);
         setNewDocumentAndFileType(fileType, document);
-        setFont(new Font("Monaco", Font.BOLD, 13));
+        setFont(EditorUtil.getEditorFont());
     }
 
     @Override

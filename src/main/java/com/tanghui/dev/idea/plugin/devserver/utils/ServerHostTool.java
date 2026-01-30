@@ -11,6 +11,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -329,7 +330,7 @@ public class ServerHostTool {
         // 创建新的终端实例
         JBTerminalWidget terminalWidget = getJbTerminalWidget(project, tempDisposable);
         // 设置字体为终端字体
-        terminalWidget.setFont(new Font("Monospaced", Font.PLAIN, 12));  // 设置固定宽度字体
+        terminalWidget.setFont(EditorUtil.getEditorFont());  // 设置固定宽度字体
         ApplicationManager.getApplication().invokeAndWait(() -> {
             Task.Backgroundable task = new Task.Backgroundable(project, "打开终端") {
                 @Override
