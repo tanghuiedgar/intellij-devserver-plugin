@@ -25,7 +25,7 @@ public class SSHJTtyConnector implements TtyConnector {
     private final InputStreamReader myReader;
     private volatile boolean connected = true;
 
-    public SSHJTtyConnector(SSHClient sshClient, Session session, Session.Shell shell) throws IOException {
+    public SSHJTtyConnector(SSHClient sshClient, Session session, Session.Shell shell) {
         this.session = session;
         this.sshClient = sshClient;
         this.shell = shell;
@@ -68,7 +68,7 @@ public class SSHJTtyConnector implements TtyConnector {
     }
 
     @Override
-    public int waitFor() throws InterruptedException {
+    public int waitFor() {
         // 非阻塞，按需要实现
         return 0;
     }

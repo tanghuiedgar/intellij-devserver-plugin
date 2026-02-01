@@ -4,11 +4,6 @@ import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.util.ResourceUtil;
 import com.tanghui.dev.idea.plugin.devserver.ui.server.BrowserPanel;
 import com.tanghui.dev.idea.plugin.devserver.utils.file.FileUtil;
-import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.ast.Node;
-import com.vladsch.flexmark.util.data.MutableDataSet;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -46,8 +41,8 @@ public class MarkdownToHtmlTool {
     public static String renderMarkdownToHtml(String markdownContent) {
         File file = FileUtil.getInstance().getResourceFile("/template/html", "template.html.vm");
         String templateContent = FileUtil.getInstance().getFileContents(file);
-        List<String> jsPathList = getPathList("template/html", "js", "prism.js");
-        List<String> cssPathList = getPathList("template/html", "css", "index.css");
+        List<String> jsPathList = getPathList("js", "prism.js");
+        List<String> cssPathList = getPathList("css", "index.css");
         Map<String, Object> param = new HashMap<>();
         param.put("jsPathList", jsPathList);
         param.put("cssPathList", cssPathList);
@@ -55,10 +50,10 @@ public class MarkdownToHtmlTool {
         return VelocityUtils.generate(templateContent, param);
     }
 
-    private static List<String> getPathList(String basePath, String fileName, String first) {
+    private static List<String> getPathList(String fileName, String first) {
         URL dirUrl = ResourceUtil.getResource(
                 MarkdownToHtmlTool.class.getClassLoader(),
-                basePath,
+                "template/html",
                 fileName
         );
         List<String> jsPathList = new ArrayList<>();
@@ -67,13 +62,13 @@ public class MarkdownToHtmlTool {
                 JarURLConnection conn = (JarURLConnection) dirUrl.openConnection();
                 JarFile jarFile = conn.getJarFile();
                 jarFile.stream()
-                        .filter(e -> e.getName().startsWith(basePath + "/" + fileName +"/"))
+                        .filter(e -> e.getName().startsWith("template/html" + "/" + fileName +"/"))
                         .filter(e -> e.getName().endsWith("." + fileName))
                         .forEach(e -> {
                             if (StringUtils.isNotBlank(e.getName())) {
                                 String[] split = e.getName().split("/");
                                 String name = split[split.length - 1];
-                                File resourceFile = FileUtil.getInstance().getResourceFile("/" + basePath +"/" + fileName, name);
+                                File resourceFile = FileUtil.getInstance().getResourceFile("/" + "template/html" +"/" + fileName, name);
                                 String replace = resourceFile.getPath().replace("\\", "/");
                                 if (StringUtils.isNotBlank(first) && replace.endsWith(first)) {
                                     jsPathList.addFirst(replace);

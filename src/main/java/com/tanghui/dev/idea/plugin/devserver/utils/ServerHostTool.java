@@ -117,6 +117,7 @@ public class ServerHostTool {
             jsonObject.put("serverGroupBy", StringUtils.isBlank(hostModel.getServerGroupBy()) ? "" : hostModel.getServerGroupBy().trim());
             jsonObject.put("command", StringUtils.isBlank(hostModel.getCommand()) ? "" : hostModel.getCommand().trim());
             jsonObject.put("serverInfo", StringUtils.isBlank(hostModel.getServerInfo()) ? "" : hostModel.getServerInfo());
+            jsonObject.put("osType", StringUtils.isBlank(hostModel.getOsType()) ? "" : hostModel.getOsType());
             jsonArray.add(jsonObject);
         }
         return jsonArray;

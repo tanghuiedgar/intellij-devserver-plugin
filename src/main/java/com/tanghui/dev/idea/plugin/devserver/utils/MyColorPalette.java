@@ -42,7 +42,6 @@ public class MyColorPalette extends TerminalColorPalette {
             ConsoleHighlighter.WHITE,
     };
 
-    private final Color[] index = new Color[256];
     private final Color defaultFg = new Color(220,220,220);
     private final Color defaultBg = new Color(25,25,25);
 
@@ -51,16 +50,6 @@ public class MyColorPalette extends TerminalColorPalette {
             EditorColorsManager.getInstance().getGlobalScheme();
 
     public MyColorPalette() {
-        // 初始化 16 色 ANSI
-        Color[] ansi = new Color[] {
-                new Color(0x1d1f21), new Color(0xcc6666), new Color(0xb5bd68), new Color(0xf0c674),
-                new Color(0x81a2be), new Color(0xb294bb), new Color(0x8abeb7), new Color(0xc5c8c6),
-                new Color(0x666666), new Color(0xd54e53), new Color(0xb9ca4a), new Color(0xe7c547),
-                new Color(0x7aa6da), new Color(0xc397d8), new Color(0x70c0b1), new Color(0xffffff)
-        };
-        for (int i = 0; i < 256; i++) {
-            index[i] = (i < 16) ? ansi[i] : null; // 其余按需填充
-        }
     }
 
     @NotNull

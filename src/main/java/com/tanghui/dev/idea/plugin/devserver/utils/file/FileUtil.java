@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -41,7 +42,7 @@ public class FileUtil {
         StringBuilder result = new StringBuilder();
         try {
             // 构造一个 BufferedReader类来读取文件
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String s;
             // 使用readLine方法，一次读一行
             while ((s = br.readLine()) != null) {
