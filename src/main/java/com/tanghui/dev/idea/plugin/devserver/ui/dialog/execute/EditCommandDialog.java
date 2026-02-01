@@ -6,9 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.OperateEnum;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
-import com.tanghui.dev.idea.plugin.devserver.tree.ServerHostTreeNode;
 import com.tanghui.dev.idea.plugin.devserver.ui.server.RemoteServer;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -16,14 +16,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 
 import static com.tanghui.dev.idea.plugin.devserver.ui.server.RemoteServer.hostModels;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.ui.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.dialog.execute
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-16:51
  * @Description: 描述类的主要功能和用途。
@@ -45,11 +44,11 @@ public class EditCommandDialog extends DialogWrapper {
         this.type = type;
         this.editCommand = new EditCommand(project, command, type);
         if (OperateEnum.ADD.equals(type)) {
-            setTitle("新增命令");
+            setTitle(DevServerBundle.INSTANCE.message("new.command"));
         } else if (OperateEnum.UPDATE.equals(type)) {
-            setTitle("修改命令");
+            setTitle(DevServerBundle.INSTANCE.message("modify.command"));
         } else if (OperateEnum.DELETE.equals(type)) {
-            setTitle("删除命令");
+            setTitle(DevServerBundle.INSTANCE.message("delete.command"));
         }
         init();
     }
@@ -72,15 +71,18 @@ public class EditCommandDialog extends DialogWrapper {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (StringUtils.isEmpty(editCommand.getTitleTextField().getText().trim())) {
-                    Messages.showMessageDialog(project, "命令标题不能为空！", "编辑命令", Messages.getErrorIcon());
+                    Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("edit.command.title"),
+                            DevServerBundle.INSTANCE.message("edit.command"), Messages.getErrorIcon());
                     return;
                 }
                 if (StringUtils.isEmpty(editCommand.getUserTextField().getText().trim())) {
-                    Messages.showMessageDialog(project, "执行用户不能为空！", "编辑命令", Messages.getErrorIcon());
+                    Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("edit.command.execution.user"),
+                            DevServerBundle.INSTANCE.message("edit.command"), Messages.getErrorIcon());
                     return;
                 }
                 if (StringUtils.isEmpty(editCommand.getDirectoryTextField().getText().trim())) {
-                    Messages.showMessageDialog(project, "执行目录不能为空！", "编辑命令", Messages.getErrorIcon());
+                    Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("edit.command.directory"),
+                            DevServerBundle.INSTANCE.message("edit.command"), Messages.getErrorIcon());
                     return;
                 }
                 String hostName = command.getSelectedNodeName(command.getLastLeft().getServerTree());

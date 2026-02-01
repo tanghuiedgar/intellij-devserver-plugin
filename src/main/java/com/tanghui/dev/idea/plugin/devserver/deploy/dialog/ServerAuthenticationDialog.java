@@ -3,6 +3,7 @@ package com.tanghui.dev.idea.plugin.devserver.deploy.dialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.JBColor;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.settings.data.DevServerRunConfig;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.dialog
  * @Author: 唐煇
  * @CreateTime: 2026-01-19-14:02
  * @Description: 服务器认证弹框。
@@ -34,7 +35,7 @@ public class ServerAuthenticationDialog extends DialogWrapper {
 
     public ServerAuthenticationDialog(@Nullable Project project, DevServerRunConfig parent) {
         super(true);
-        setTitle("服务器配置");
+        setTitle(DevServerBundle.INSTANCE.message("server.config"));
         this.project = project;
         this.serverAuthentication = new ServerAuthentication(this.project, parent);
         this.root = this.serverAuthentication.$$$getRootComponent$$$();
@@ -73,7 +74,7 @@ public class ServerAuthenticationDialog extends DialogWrapper {
                     dispose();
                 } else {
                     serverAuthentication.getInfoTextArea().setForeground(new JBColor(new Color(175, 0, 0), new Color(175, 0, 0)));
-                    serverAuthentication.getInfoTextArea().setText("请连接服务器！");
+                    serverAuthentication.getInfoTextArea().setText(DevServerBundle.INSTANCE.message("server.config.message"));
                 }
             }
         };

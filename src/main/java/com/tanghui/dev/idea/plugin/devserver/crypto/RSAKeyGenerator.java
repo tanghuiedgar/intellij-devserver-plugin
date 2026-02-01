@@ -1,7 +1,7 @@
 package com.tanghui.dev.idea.plugin.devserver.crypto;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.common.utils.crypto
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.crypto
  * @Author: 唐煇
  * @CreateTime: 2025-12-24-16:48
  * @Description: 描述类的主要功能和用途。

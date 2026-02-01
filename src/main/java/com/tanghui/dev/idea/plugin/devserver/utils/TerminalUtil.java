@@ -1,15 +1,6 @@
 package com.tanghui.dev.idea.plugin.devserver.utils;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationAction;
-import com.intellij.notification.NotificationGroupManager;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
@@ -19,21 +10,12 @@ import com.intellij.terminal.JBTerminalWidget;
 import com.intellij.terminal.TerminalColorPalette;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import com.jediterm.core.util.TermSize;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
-import com.tanghui.dev.idea.plugin.devserver.pool.SshClientFactory;
-import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.connection.channel.direct.PTYMode;
-import net.schmizz.sshj.connection.channel.direct.Session;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.EnumMap;
 import java.util.List;
 
 import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.createRemoteNewTerminalComponent;

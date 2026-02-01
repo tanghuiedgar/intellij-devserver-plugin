@@ -56,7 +56,7 @@ import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.fileExi
 import static com.tanghui.dev.idea.plugin.devserver.utils.SizeFormatUtils.formatBinary;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.transfer.ui
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.transfer.ui
  * @Author: 唐煇
  * @CreateTime: 2025-12-03-14:38
  * @Description: 文件传输ui。
@@ -132,8 +132,8 @@ public class FileTransfer {
     // 重启
     private boolean restart = false;
 
-    private static final String START_TEXT = "已启动";
-    private static final String STOP_TEXT = "已停止";
+    private static final String START_TEXT = DevServerBundle.INSTANCE.message("started");
+    private static final String STOP_TEXT = DevServerBundle.INSTANCE.message("stopped");
 
     private boolean finish = false;
 
@@ -168,7 +168,7 @@ public class FileTransfer {
         if (this.fileFindButton != null) {
             this.fileFindButton.setBorder(null);
             this.fileFindButton.setIcon(DevServerIcons.DevServer_OPEN);
-            this.fileFindButton.setToolTipText("本地文件路径");
+            this.fileFindButton.setToolTipText(DevServerBundle.INSTANCE.message("local.file.path"));
         }
         if (this.startOverButton != null) {
             this.startOverButton.setBorder(null);
@@ -180,7 +180,7 @@ public class FileTransfer {
         }
         if (this.directionLabel != null) {
             if (this.fileTransferModel.getState()) {
-                this.directionLabel.setText("上传");
+                this.directionLabel.setText(DevServerBundle.INSTANCE.message("upload"));
                 File file = new File(this.fileTransferModel.getLocalFilesPath() + File.separator + this.fileTransferModel.getLocalFilesName());
                 if (file.exists()) {
                     // 计算文件的 MD5 值
@@ -205,7 +205,7 @@ public class FileTransfer {
 
     // 创建连接
     private void createConnection() {
-        new Task.Backgroundable(project, "正在连接服务器...") {
+        new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("are.connect.server")) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
@@ -221,7 +221,7 @@ public class FileTransfer {
                     createConnect = false;
                     start = true;
                     if (!fileTransferModel.getState()) {
-                        directionLabel.setText("下载");
+                        directionLabel.setText(DevServerBundle.INSTANCE.message("download"));
                         String remoteFilePath = fileTransferModel.getRemoteFilesPath() + "/" + fileTransferModel.getRemoteFilesName();
                         try (SFTPClient sftpClient = ssh.newSFTPClient();
                              Session session = ssh.startSession()) {
@@ -244,7 +244,8 @@ public class FileTransfer {
                         finish = true;
                         ApplicationManager.getApplication().invokeLater(() ->
                                 NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                                        .createNotification("服务器连接", "服务器连接失败！", NotificationType.ERROR)
+                                        .createNotification(DevServerBundle.INSTANCE.message("server.connect.title"),
+                                                DevServerBundle.INSTANCE.message("server.connect.error"), NotificationType.ERROR)
                                         .notify(project)
                         );
                     }
@@ -308,8 +309,8 @@ public class FileTransfer {
         if (this.createConnect) {
             // 连接正在创建中
             Messages.showMessageDialog(
-                    "连接正在创建中请稍后重试！",
-                    "Host",
+                    DevServerBundle.INSTANCE.message("server.connect.warn"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"),
                     Messages.getInformationIcon()
             );
             return;
@@ -338,15 +339,15 @@ public class FileTransfer {
         if (this.createConnect) {
             // 连接正在创建中
             Messages.showMessageDialog(
-                    "连接正在创建中请稍后重试！",
-                    "Host",
+                    DevServerBundle.INSTANCE.message("server.connect.warn"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"),
                     Messages.getInformationIcon()
             );
             return;
         }
         int result = Messages.showYesNoDialog(
-                "是否重新传输",
-                "文件传输",
+                DevServerBundle.INSTANCE.message("file.transfer.warn"),
+                DevServerBundle.INSTANCE.message("file.transfer"),
                 DevServerBundle.INSTANCE.message("define", ""),
                 DevServerBundle.INSTANCE.message("cancel", ""),
                 Messages.getQuestionIcon()
@@ -368,15 +369,15 @@ public class FileTransfer {
         if (this.createConnect) {
             // 连接正在创建中
             Messages.showMessageDialog(
-                    "连接正在创建中请稍后重试！",
-                    "Host",
+                    DevServerBundle.INSTANCE.message("server.connect.warn"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"),
                     Messages.getInformationIcon()
             );
             return;
         }
         int result = Messages.showYesNoDialog(
-                "是否终止传输",
-                "文件传输",
+                DevServerBundle.INSTANCE.message("file.transfer.error"),
+                DevServerBundle.INSTANCE.message("file.transfer"),
                 DevServerBundle.INSTANCE.message("define", ""),
                 DevServerBundle.INSTANCE.message("cancel", ""),
                 Messages.getQuestionIcon()
@@ -388,7 +389,7 @@ public class FileTransfer {
             this.startOverButton.setEnabled(false);
             this.endButton.setEnabled(false);
             this.finish = true;
-            this.timeLeftLabel.setText("已终止");
+            this.timeLeftLabel.setText(DevServerBundle.INSTANCE.message("terminated"));
             this.timeLeftLabel.setFont(JBUI.Fonts.label());
             this.timeLeftLabel.setForeground(new JBColor(new Color(205, 5, 5), new Color(205, 5, 5)));
             this.transferCallback.stopTransfer();
@@ -434,7 +435,7 @@ public class FileTransfer {
                 if (file.exists()) {
                     size = file.length();
                 } else {
-                    file.createNewFile();   // 创建一个空文件
+                    boolean newFile = file.createNewFile();// 创建一个空文件
                 }
                 if (restart) {
                     // 继续传输，读取本地文件大小
@@ -445,7 +446,7 @@ public class FileTransfer {
                         FileOutputStream fos = new FileOutputStream(file, false); //
                         fos.close(); // 立即关闭即可，文件内容被清空
                     } else {
-                        file.createNewFile();
+                        boolean newFile = file.createNewFile();
                     }
                     fileTransferModel.setOffset(0L);
                 }
@@ -460,7 +461,9 @@ public class FileTransfer {
                 this.stateButton.setText(STOP_TEXT);
                 finish = true;
                 ApplicationManager.getApplication().invokeLater(() -> NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                        .createNotification("服务器连接", "传输文件失败！", NotificationType.INFORMATION)
+                        .createNotification(DevServerBundle.INSTANCE.message("server.connect.title"),
+                                DevServerBundle.INSTANCE.message("file.transfer.failed"),
+                                NotificationType.INFORMATION)
                         .addAction(new NotificationAction("") {
                             @Override
                             public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
@@ -500,7 +503,7 @@ public class FileTransfer {
         Font label1Font = this.$$$getFont$$$(null, Font.BOLD, -1, label1.getFont());
         if (label1Font != null) label1.setFont(label1Font);
         label1.setForeground(new Color(-16722177));
-        label1.setText("文件大小");
+        label1.setText(DevServerBundle.INSTANCE.message("file.size"));
         panel2.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel3 = new JBPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -521,7 +524,7 @@ public class FileTransfer {
         Font label2Font = this.$$$getFont$$$(null, Font.BOLD, -1, label2.getFont());
         if (label2Font != null) label2.setFont(label2Font);
         label2.setForeground(new Color(-16722177));
-        label2.setText("文件名称");
+        label2.setText(DevServerBundle.INSTANCE.message("file.name"));
         panel5.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel6 = new JBPanel();
         panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -551,7 +554,7 @@ public class FileTransfer {
         Font label3Font = this.$$$getFont$$$(null, Font.BOLD, -1, label3.getFont());
         if (label3Font != null) label3.setFont(label3Font);
         label3.setForeground(new Color(-16722177));
-        label3.setText("传输进度");
+        label3.setText(DevServerBundle.INSTANCE.message("transfer.progress"));
         panel9.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel10 = new JBPanel();
         panel10.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -586,7 +589,7 @@ public class FileTransfer {
         Font label4Font = this.$$$getFont$$$(null, Font.BOLD, -1, label4.getFont());
         if (label4Font != null) label4.setFont(label4Font);
         label4.setForeground(new Color(-16722177));
-        label4.setText("网络速度");
+        label4.setText(DevServerBundle.INSTANCE.message("network.speed"));
         panel14.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel15 = new JBPanel();
         panel15.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -607,7 +610,7 @@ public class FileTransfer {
         Font label5Font = this.$$$getFont$$$(null, Font.BOLD, -1, label5.getFont());
         if (label5Font != null) label5.setFont(label5Font);
         label5.setForeground(new Color(-16722177));
-        label5.setText("传输方向");
+        label5.setText(DevServerBundle.INSTANCE.message("transmission.direction"));
         panel17.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel18 = new JBPanel();
         panel18.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -633,7 +636,7 @@ public class FileTransfer {
         Font label6Font = this.$$$getFont$$$(null, Font.BOLD, -1, label6.getFont());
         if (label6Font != null) label6.setFont(label6Font);
         label6.setForeground(new Color(-16722177));
-        label6.setText("剩余时间");
+        label6.setText(DevServerBundle.INSTANCE.message("time.left"));
         panel21.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel22 = new JBPanel();
         panel22.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -654,7 +657,7 @@ public class FileTransfer {
         Font label7Font = this.$$$getFont$$$(null, Font.BOLD, -1, label7.getFont());
         if (label7Font != null) label7.setFont(label7Font);
         label7.setForeground(new Color(-16722177));
-        label7.setText("传输时间");
+        label7.setText(DevServerBundle.INSTANCE.message("transmission.time"));
         panel24.add(label7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel25 = new JBPanel();
         panel25.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -675,7 +678,7 @@ public class FileTransfer {
         Font label8Font = this.$$$getFont$$$(null, Font.BOLD, -1, label8.getFont());
         if (label8Font != null) label8.setFont(label8Font);
         label8.setForeground(new Color(-16722177));
-        label8.setText("文件MD5");
+        label8.setText(DevServerBundle.INSTANCE.message("file.md5"));
         panel27.add(label8, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel28 = new JBPanel();
         panel28.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -702,7 +705,7 @@ public class FileTransfer {
         Font startOverButtonFont = this.$$$getFont$$$(null, Font.BOLD, -1, startOverButton.getFont());
         if (startOverButtonFont != null) startOverButton.setFont(startOverButtonFont);
         startOverButton.setForeground(new Color(-19170));
-        startOverButton.setText("重新传输");
+        startOverButton.setText(DevServerBundle.INSTANCE.message("retransmit"));
         panel31.add(startOverButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel32 = new JBPanel();
         panel32.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -711,7 +714,7 @@ public class FileTransfer {
         Font endButtonFont = this.$$$getFont$$$(null, Font.BOLD, -1, endButton.getFont());
         if (endButtonFont != null) endButton.setFont(endButtonFont);
         endButton.setForeground(new Color(-65536));
-        endButton.setText("终止传输");
+        endButton.setText(DevServerBundle.INSTANCE.message("terminate.transfer"));
         panel32.add(endButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel33 = new JBPanel();
         panel33.setLayout(new BorderLayout(0, 0));
@@ -732,7 +735,7 @@ public class FileTransfer {
         Font label9Font = this.$$$getFont$$$(null, Font.BOLD, -1, label9.getFont());
         if (label9Font != null) label9.setFont(label9Font);
         label9.setForeground(new Color(-16722177));
-        label9.setText("服务器");
+        label9.setText(DevServerBundle.INSTANCE.message("server"));
         panel35.add(label9, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel36 = new JBPanel();
         panel36.setLayout(new BorderLayout(0, 0));
@@ -753,7 +756,7 @@ public class FileTransfer {
         Font label10Font = this.$$$getFont$$$(null, Font.BOLD, -1, label10.getFont());
         if (label10Font != null) label10.setFont(label10Font);
         label10.setForeground(new Color(-16722177));
-        label10.setText("操作用户");
+        label10.setText(DevServerBundle.INSTANCE.message("operating.user"));
         panel38.add(label10, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel39 = new JBPanel();
         panel39.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -774,7 +777,7 @@ public class FileTransfer {
         Font label11Font = this.$$$getFont$$$(null, Font.BOLD, -1, label11.getFont());
         if (label11Font != null) label11.setFont(label11Font);
         label11.setForeground(new Color(-16722177));
-        label11.setText("远程目录");
+        label11.setText(DevServerBundle.INSTANCE.message("remote.directory"));
         panel41.add(label11, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel42 = new JBPanel();
         panel42.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

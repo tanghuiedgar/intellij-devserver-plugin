@@ -5,6 +5,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.OperateEnum;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.pool.GlobalSshPoolManager;
@@ -23,7 +24,7 @@ import static com.tanghui.dev.idea.plugin.devserver.ui.server.RemoteServer.hostM
 import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.saveServerHost;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.ui.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.dialog.connectserver
  * @Author: 唐煇
  * @CreateTime: 2025-12-22-08:54
  * @Description: 描述类的主要功能和用途。
@@ -51,7 +52,7 @@ public class ConnectServerDialog extends DialogWrapper {
                                OperateEnum operateType,
                                ServerHostModel serverHostModel) {
         super(true);
-        setTitle("连接服务器");
+        setTitle(DevServerBundle.INSTANCE.message("connect.server"));
         this.project = project;
         this.operateType = operateType;
         this.serverHostModel = serverHostModel;
@@ -81,9 +82,9 @@ public class ConnectServerDialog extends DialogWrapper {
             }
         };
         if (operateType.equals(OperateEnum.DELETE)) {
-            action.putValue(Action.NAME, "删除");
+            action.putValue(Action.NAME, DevServerBundle.INSTANCE.message("sql.field.type.mapper.delete"));
         } else {
-            action.putValue(Action.NAME, "连接");
+            action.putValue(Action.NAME, DevServerBundle.INSTANCE.message("connect"));
         }
         return new Action[]{
                 action,
@@ -101,7 +102,8 @@ public class ConnectServerDialog extends DialogWrapper {
                     return host.getHost().equals(text);
                 }).findFirst();
                 if (first.isPresent() && OperateEnum.ADD.equals(operateType)) {
-                    Messages.showMessageDialog(project, "当前主机已经添加，请勿重复添加！现有分组: " + first.get().getServerGroupBy(), "添加主机", Messages.getWarningIcon());
+                    Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("server.add.message.warn") + " " + first.get().getServerGroupBy(),
+                            DevServerBundle.INSTANCE.message("server.add.title"), Messages.getWarningIcon());
                 } else {
                     if (!isConnect) {
                         onConnectButton();
@@ -120,30 +122,34 @@ public class ConnectServerDialog extends DialogWrapper {
     private void onConnectButton() {
         String host = this.connectServer.getServerHost().getText();
         if (StringUtils.isBlank(host)) {
-            Messages.showMessageDialog(project, "主机不能为空", "服务器连接校验", Messages.getErrorIcon());
+            Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("server.host.check.message"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"), Messages.getErrorIcon());
             isConnect = false;
             return;
         }
         String port = this.connectServer.getServerPort().getText();
         if (StringUtils.isBlank(port)) {
-            Messages.showMessageDialog(project, "端口不能为空", "服务器连接校验", Messages.getErrorIcon());
+            Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("server.port.check.message"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"), Messages.getErrorIcon());
             isConnect = false;
             return;
         }
         String user = this.connectServer.getServerUser().getText();
         if (StringUtils.isBlank(user)) {
-            Messages.showMessageDialog(project, "用户不能为空", "服务器连接校验", Messages.getErrorIcon());
+            Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("server.user.check.message"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"), Messages.getErrorIcon());
             isConnect = false;
             return;
         }
         String password = new String(this.connectServer.getServerPassword().getPassword());
         if (StringUtils.isBlank(password)) {
-            Messages.showMessageDialog(project, "密码不能为空", "服务器连接校验", Messages.getErrorIcon());
+            Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("server.password.check.message"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"), Messages.getErrorIcon());
             isConnect = false;
             return;
         }
-        this.connectServer.getFeedback().setText("正在连接服务器...");
-        new Task.Backgroundable(project, "正在连接服务器...") {
+        this.connectServer.getFeedback().setText(DevServerBundle.INSTANCE.message("are.connect.server"));
+        new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("are.connect.server")) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
@@ -158,7 +164,7 @@ public class ConnectServerDialog extends DialogWrapper {
                 try {
                     ssh = pool.borrow();
                     if (ssh.isConnected() && ssh.isAuthenticated()) {
-                        connectServer.getFeedback().setText("连接成功！");
+                        connectServer.getFeedback().setText(DevServerBundle.INSTANCE.message("server.connect.success"));
                         connectServer.getFeedback().updateUI();
                         serverHostModel.setHost(connectServer.getServerHost().getText());
                         serverHostModel.setPort(Integer.parseInt(port));
@@ -168,11 +174,11 @@ public class ConnectServerDialog extends DialogWrapper {
                         serverHostModel.setEnvironment(connectServer.getDescribe().getText());
                         isConnect = true;
                     } else {
-                        connectServer.getFeedback().setText("连接失败！");
+                        connectServer.getFeedback().setText(DevServerBundle.INSTANCE.message("server.connect.error"));
                         isConnect = false;
                     }
                 } catch (Exception e) {
-                    connectServer.getFeedback().setText("连接失败！");
+                    connectServer.getFeedback().setText(DevServerBundle.INSTANCE.message("server.connect.error"));
                     isConnect = false;
                 } finally {
                     pool.release(ssh);
@@ -184,7 +190,8 @@ public class ConnectServerDialog extends DialogWrapper {
     private void onDeleteButton(){
         String host = this.connectServer.getServerHost().getText();
         if (StringUtils.isBlank(host)) {
-            Messages.showMessageDialog(project, "主机不能为空", "服务器连接校验", Messages.getErrorIcon());
+            Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("server.host.check.message"),
+                    DevServerBundle.INSTANCE.message("server.connect.title"), Messages.getErrorIcon());
             this.operate = false;
             return;
         }

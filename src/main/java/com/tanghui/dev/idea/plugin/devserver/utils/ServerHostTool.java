@@ -23,6 +23,7 @@ import com.intellij.terminal.JBTerminalWidget;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.jediterm.core.util.TermSize;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostFileModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons;
@@ -297,7 +298,7 @@ public class ServerHostTool {
             cmd.join();
             return out;
         } catch (Exception e) {
-            throw new RuntimeException("执行命令失败: " + command + ", err=" + e.getMessage(), e);
+            throw new RuntimeException(DevServerBundle.INSTANCE.message("deploy.server.type.execute.command.error") + ": " + command + ", err=" + e.getMessage(), e);
         }
     }
 
@@ -332,7 +333,7 @@ public class ServerHostTool {
         // 设置字体为终端字体
         terminalWidget.setFont(EditorUtil.getEditorFont());  // 设置固定宽度字体
         ApplicationManager.getApplication().invokeAndWait(() -> {
-            Task.Backgroundable task = new Task.Backgroundable(project, "打开终端") {
+            Task.Backgroundable task = new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("open.terminal.title")) {
                 @Override
                 public void run(@NotNull ProgressIndicator progressIndicator) {
                     progressIndicator.setIndeterminate(true);
@@ -373,7 +374,8 @@ public class ServerHostTool {
                         connector.resize(size);
                     } catch (Exception e) {
                         ApplicationManager.getApplication().invokeLater(() -> NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                                .createNotification("服务器连接", "服务器连接失败！", NotificationType.INFORMATION)
+                                .createNotification(DevServerBundle.INSTANCE.message("server.connect.title"),
+                                        DevServerBundle.INSTANCE.message("server.connect.error"), NotificationType.INFORMATION)
                                 .notify(project));
                     }
                 }

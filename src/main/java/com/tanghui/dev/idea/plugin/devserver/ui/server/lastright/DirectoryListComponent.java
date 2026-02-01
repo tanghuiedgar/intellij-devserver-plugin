@@ -1,15 +1,14 @@
 package com.tanghui.dev.idea.plugin.devserver.ui.server.lastright;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.*;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostFileModel;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +85,7 @@ public class DirectoryListComponent {
             comp2.setLayout(new BorderLayout());
             comp2.setPreferredSize(JBUI.size(-1, 30));
             JBLabel fileNameLabel = new JBLabel();
-            fileNameLabel.setText("文件：");
+            fileNameLabel.setText(DevServerBundle.INSTANCE.message("file") + "：");
             fileNameLabel.setPreferredSize(JBUI.size(40, -1));
             JBLabel fileLabel = new JBLabel();
             fileLabel.setText(value.getFileName());

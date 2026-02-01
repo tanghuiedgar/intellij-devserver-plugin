@@ -1,6 +1,5 @@
 package com.tanghui.dev.idea.plugin.devserver.ui.server.lastright;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -14,6 +13,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostFileModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons;
@@ -33,7 +33,7 @@ import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.getFile
 import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.getServerHostFileModels;
 
 /**
- * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.server
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.server.lastright
  * @Author: 唐煇
  * @CreateTime: 2026-01-22-16:23
  * @Description: 上右窗口。
@@ -67,7 +67,7 @@ public class LastRightComponent {
 
     public static boolean passwordShow = false;
 
-    public LastRightComponent(Project project, Tree serverTree, Disposable parentDisposable) {
+    public LastRightComponent(Project project, Tree serverTree) {
         this.project = project;
         this.serverTree = serverTree;
         $$$setupUI$$$();
@@ -75,16 +75,14 @@ public class LastRightComponent {
     }
 
     private void setSelectionListener() {
-        this.directoryTree.getServerDirectoryTree().addTreeSelectionListener(e -> {
-            new Task.Backgroundable(project, "连接服务器") {
-                @Override
-                public void run(@NotNull ProgressIndicator progressIndicator) {
-                    progressIndicator.setIndeterminate(true);
-                    TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
-                    refreshDirectoryList(newLeadSelectionPath);
-                }
-            }.queue();
-        });
+        this.directoryTree.getServerDirectoryTree().addTreeSelectionListener(e -> new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("connect.server")) {
+            @Override
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                progressIndicator.setIndeterminate(true);
+                TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
+                refreshDirectoryList(newLeadSelectionPath);
+            }
+        }.queue());
     }
 
     public void refreshDirectoryList(TreePath newLeadSelectionPath) {
@@ -137,7 +135,6 @@ public class LastRightComponent {
     }
 
     private void createUIComponents() {
-        // TODO: place custom component creation code here
         this.directorySplitter = new Splitter(false, 0.3f);
         this.directoryTree = new DirectoryTreeComponent(project);
         this.directoryList = new DirectoryListComponent(project);
@@ -167,7 +164,7 @@ public class LastRightComponent {
         root.add(serverInfoTabbedPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         infoPanel = new JBPanel();
         infoPanel.setLayout(new BorderLayout(0, 0));
-        serverInfoTabbedPane.addTab("信息", infoPanel);
+        serverInfoTabbedPane.addTab(DevServerBundle.INSTANCE.message("information"), infoPanel);
         connectionOperationToolbar = new JBPanel();
         connectionOperationToolbar.setLayout(new BorderLayout(0, 0));
         connectionOperationToolbar.setMaximumSize(JBUI.size(2147483647, 30));
@@ -190,7 +187,7 @@ public class LastRightComponent {
         panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 20, 0, 0), -1, -1));
         panel3.add(panel4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JBLabel label1 = new JBLabel();
-        label1.setText("服务器IP");
+        label1.setText(DevServerBundle.INSTANCE.message("server.ip"));
         panel4.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel5 = new JBPanel();
         panel5.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -205,7 +202,7 @@ public class LastRightComponent {
         panel7.setLayout(new GridLayoutManager(1, 1, new Insets(0, 20, 0, 0), -1, -1));
         panel6.add(panel7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JBLabel label2 = new JBLabel();
-        label2.setText("连接用户");
+        label2.setText(DevServerBundle.INSTANCE.message("connect.user"));
         panel7.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel8 = new JBPanel();
         panel8.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -220,7 +217,7 @@ public class LastRightComponent {
         panel10.setLayout(new GridLayoutManager(1, 1, new Insets(0, 20, 0, 0), -1, -1));
         panel9.add(panel10, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JBLabel label3 = new JBLabel();
-        label3.setText("用户密码");
+        label3.setText(DevServerBundle.INSTANCE.message("user.password"));
         panel10.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel11 = new JBPanel();
         panel11.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -245,10 +242,10 @@ public class LastRightComponent {
         directoryPanel.add(directorySplitter, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         detailPanel = new JBPanel();
         detailPanel.setLayout(new BorderLayout(0, 0));
-        serverInfoTabbedPane.addTab("详情", detailPanel);
+        serverInfoTabbedPane.addTab(DevServerBundle.INSTANCE.message("detail"), detailPanel);
         executePanel = new JBPanel();
         executePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        serverInfoTabbedPane.addTab("执行", executePanel);
+        serverInfoTabbedPane.addTab(DevServerBundle.INSTANCE.message("execute"), executePanel);
         executePanel.add(executeSplitter, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     }
 

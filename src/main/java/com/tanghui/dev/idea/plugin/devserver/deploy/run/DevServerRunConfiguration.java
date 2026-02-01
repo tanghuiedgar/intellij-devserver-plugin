@@ -2,7 +2,6 @@ package com.tanghui.dev.idea.plugin.devserver.deploy.run;
 
 import com.intellij.configurationStore.XmlSerializer;
 import com.intellij.execution.BeforeRunTask;
-import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @BelongsPackage: com.tanghui.run
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.run
  * @Author: 唐煇
  * @CreateTime: 2024-07-19 09:00
  * @Description: 描述类的主要功能和用途。
@@ -61,8 +60,7 @@ public class DevServerRunConfiguration extends RunConfigurationBase<DevServerRun
 
     @Nullable
     @Override
-    public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment)
-            throws ExecutionException {
+    public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
         return new DevServerRunProfileState(this, this.project);
     }
 
@@ -72,7 +70,7 @@ public class DevServerRunConfiguration extends RunConfigurationBase<DevServerRun
     }
 
     @Override
-    public void checkConfiguration() throws RuntimeConfigurationException {
+    public void checkConfiguration() {
         List<BeforeRunTask<?>> beforeRunTasks = this.getBeforeRunTasks();
         beforeRunTasks.forEach(v -> {
 

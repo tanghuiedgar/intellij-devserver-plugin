@@ -12,6 +12,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.pool.GlobalSshPoolManager;
 import com.tanghui.dev.idea.plugin.devserver.pool.SshConnectionPool;
@@ -37,7 +38,7 @@ import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.fileExi
 
 
 /**
- * @BelongsPackage: com.tanghui.run
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.run
  * @Author: 唐煇
  * @CreateTime: 2024-07-19 10:34
  * @Description: 描述类的主要功能和用途。
@@ -107,7 +108,7 @@ public class DevServerRunConsoleView {
         this.rollback = true;
         if (rollbackButton != null) rollbackButton.setEnabled(false);
         ApplicationManager.getApplication().invokeLater(() -> {
-            Task.Backgroundable task = new Task.Backgroundable(project, "版本回退") {
+            Task.Backgroundable task = new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("version.rollback.title")) {
                 @Override
                 public void run(@NotNull ProgressIndicator progressIndicator) {
                     progressIndicator.setIndeterminate(true);
@@ -119,7 +120,7 @@ public class DevServerRunConsoleView {
                     );
                     SSHClient ssh = null;
                     print("", ConsoleViewContentType.NORMAL_OUTPUT);
-                    print("\033[1;34m版本回退操作(开始)\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
+                    print("\033[1;34m" + DevServerBundle.INSTANCE.message("version.rollback.title.start") + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
                     try {
                         // 创建会话并连接
                         ssh = pool.borrow();
@@ -219,7 +220,7 @@ public class DevServerRunConsoleView {
                     } finally {
                         pool.release(ssh);
                     }
-                    print("\033[1;34m版本回退操作(结束)\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
+                    print("\033[1;34m" + DevServerBundle.INSTANCE.message("version.rollback.title.finish") + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
                     progressIndicator.setIndeterminate(false);
                 }
             };

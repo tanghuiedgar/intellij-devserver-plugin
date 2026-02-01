@@ -17,6 +17,7 @@ import com.intellij.ui.components.*;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerInfoModel;
 import com.tanghui.dev.idea.plugin.devserver.pool.GlobalSshPoolManager;
 import com.tanghui.dev.idea.plugin.devserver.pool.SshConnectionPool;
@@ -42,7 +43,7 @@ import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.execStd
 import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.userExists;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.dialog
  * @Author: 唐煇
  * @CreateTime: 2026-01-19-14:21
  * @Description: 服务器认证。
@@ -107,8 +108,8 @@ public class ServerAuthentication {
             @Override
             public void actionPerformed(ActionEvent e) {
                 infoTextArea.setForeground(new JBColor(new Color(0, 214, 255), new Color(0, 214, 255)));
-                infoTextArea.setText("正在连接服务器...");
-                Task.Backgroundable task = new Task.Backgroundable(project, "执行后续命令") {
+                infoTextArea.setText(DevServerBundle.INSTANCE.message("are.connect.server"));
+                Task.Backgroundable task = new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("execute.follow-up.command")) {
                     private String infoText = "";
 
                     @Override
@@ -122,10 +123,10 @@ public class ServerAuthentication {
                         String user = userTextField.getText();
                         // 获取密码
                         String password = new String(passwordField.getPassword());
-                        if (checkNotBlank(serverHost, "服务器地址不能为空")) return;
-                        if (checkNotBlank(port, "端口不能为空！")) return;
-                        if (checkNotBlank(user, "用户名不能为空！")) return;
-                        if (checkNotBlank(password, "密码不能为空！")) return;
+                        if (checkNotBlank(serverHost, DevServerBundle.INSTANCE.message("server.host.check.message"))) return;
+                        if (checkNotBlank(port, DevServerBundle.INSTANCE.message("server.port.check.message"))) return;
+                        if (checkNotBlank(user, DevServerBundle.INSTANCE.message("server.user.check.message"))) return;
+                        if (checkNotBlank(password, DevServerBundle.INSTANCE.message("server.password.check.message"))) return;
                         ApplicationManager.getApplication().invokeAndWait(() -> {
                             // 创建会话并连接
                             SshConnectionPool pool = GlobalSshPoolManager.getPool(
@@ -144,17 +145,17 @@ public class ServerAuthentication {
                                     String result = execStdout(session, "uname -a");
                                     successNot = true;
                                     if (StringUtils.isNotBlank(result)) {
-                                        infoText = "服务器信息：" + result;
+                                        infoText = DevServerBundle.INSTANCE.message("server.info") + result;
                                     } else {
-                                        infoText = "服务器连接成功！";
+                                        infoText = DevServerBundle.INSTANCE.message("server.connect.success");
                                     }
                                 } else {
                                     successNot = false;
-                                    infoText = "服务器连接失败！";
+                                    infoText = DevServerBundle.INSTANCE.message("server.connect.error");
                                 }
                             } catch (Exception exception) {
                                 successNot = false;
-                                infoText = "服务器连接失败！";
+                                infoText = DevServerBundle.INSTANCE.message("server.connect.error");
                             } finally {
                                 // 关闭资源
                                 if (session != null) try {
@@ -180,9 +181,8 @@ public class ServerAuthentication {
                     public void onThrowable(@NotNull Throwable error) {
                         if (!successNot) {
                             infoTextArea.setForeground(new JBColor(new Color(175, 0, 0), new Color(175, 0, 0)));
-                            infoTextArea.setText("服务器连接失败！");
+                            infoTextArea.setText(DevServerBundle.INSTANCE.message("server.connect.error"));
                         }
-                        ;
                     }
                 };
                 ProgressManager.getInstance().run(task);
@@ -231,7 +231,7 @@ public class ServerAuthentication {
         panel5.setPreferredSize(JBUI.size(80, 24));
         panel4.add(panel5, BorderLayout.WEST);
         final JBLabel label1 = new JBLabel();
-        label1.setText("服务器");
+        label1.setText(DevServerBundle.INSTANCE.message("server"));
         panel5.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel6 = new JBPanel();
         panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -247,7 +247,7 @@ public class ServerAuthentication {
         panel8.setPreferredSize(JBUI.size(70, 24));
         panel7.add(panel8, BorderLayout.WEST);
         final JBLabel label2 = new JBLabel();
-        label2.setText("端口");
+        label2.setText(DevServerBundle.INSTANCE.message("port"));
         panel8.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel9 = new JBPanel();
         panel9.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -270,7 +270,7 @@ public class ServerAuthentication {
         panel12.setPreferredSize(JBUI.size(80, 24));
         panel11.add(panel12, BorderLayout.WEST);
         final JBLabel label3 = new JBLabel();
-        label3.setText("连接用户");
+        label3.setText(DevServerBundle.INSTANCE.message("connect.user"));
         panel12.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel13 = new JBPanel();
         panel13.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -287,7 +287,7 @@ public class ServerAuthentication {
         panel15.setPreferredSize(JBUI.size(100, 24));
         panel14.add(panel15, BorderLayout.WEST);
         final JBLabel label4 = new JBLabel();
-        label4.setText("操作用户");
+        label4.setText(DevServerBundle.INSTANCE.message("operating.user"));
         panel15.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel16 = new JBPanel();
         panel16.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -313,7 +313,7 @@ public class ServerAuthentication {
         panel19.setPreferredSize(JBUI.size(80, 24));
         panel18.add(panel19, BorderLayout.WEST);
         final JBLabel label5 = new JBLabel();
-        label5.setText("用户密码");
+        label5.setText(DevServerBundle.INSTANCE.message("user.password"));
         panel19.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel20 = new JBPanel();
         panel20.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -327,7 +327,7 @@ public class ServerAuthentication {
         panel21.setPreferredSize(JBUI.size(80, 24));
         panel17.add(panel21, BorderLayout.EAST);
         joinButton = new JButton();
-        joinButton.setText("连接");
+        joinButton.setText(DevServerBundle.INSTANCE.message("connect"));
         panel21.add(joinButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, JBUI.size(80, -1), JBUI.size(80, -1), JBUI.size(80, -1), 0, false));
         final JBPanel panel22 = new JBPanel();
         panel22.setLayout(new GridLayoutManager(1, 1, new Insets(10, 20, 10, 20), -1, -1));

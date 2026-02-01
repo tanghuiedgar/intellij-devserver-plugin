@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.ui.model
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.model
  * @Author: 唐煇
  * @CreateTime: 2025-09-16-14:30
  * @Description: DevServer自定义表格模型。

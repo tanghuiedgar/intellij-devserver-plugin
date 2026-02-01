@@ -24,7 +24,7 @@ import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.console
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.console
  * @Author: 唐煇
  * @CreateTime: 2025-12-10-10:49
  * @Description: 自定义 ExecutionConsole 包装器。
@@ -98,8 +98,8 @@ public class CustomExecutionConsole implements ExecutionConsole {
         rollbackButton.addActionListener(e ->
                 ApplicationManager.getApplication().invokeAndWait(() -> {
                             int result = Messages.showYesNoDialog(
-                                    "是否回退当前升级的版本",
-                                    "版本回退",
+                                    DevServerBundle.INSTANCE.message("version.rollback.message"),
+                                    DevServerBundle.INSTANCE.message("version.rollback.title"),
                                     DevServerBundle.INSTANCE.message("define", ""),
                                     DevServerBundle.INSTANCE.message("cancel", ""),
                                     Messages.getQuestionIcon()
@@ -115,7 +115,9 @@ public class CustomExecutionConsole implements ExecutionConsole {
                             } else if (result == Messages.YES) {
                                 ApplicationManager.getApplication().invokeLater(() ->
                                         NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                                                .createNotification("版本回退", "当前升级版本已经回退！", NotificationType.INFORMATION)
+                                                .createNotification(DevServerBundle.INSTANCE.message("version.rollback.title"),
+                                                        DevServerBundle.INSTANCE.message("version.rollback.content"),
+                                                        NotificationType.INFORMATION)
                                                 .addAction(new NotificationAction("") {
                                                     @Override
                                                     public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {

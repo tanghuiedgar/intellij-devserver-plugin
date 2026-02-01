@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * @BelongsPackage: com.tanghui.tree
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.tree
  * @Author: 唐煇
  * @CreateTime: 2024-11-21-上午11:48
  * @Description: 描述类的主要功能和用途。

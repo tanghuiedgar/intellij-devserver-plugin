@@ -4,7 +4,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.code.generator.listener.documentlistener
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.listener
  * @Author: 唐煇
  * @CreateTime: 2025-03-12-11:08
  * @Description: 描述类的主要功能和用途。

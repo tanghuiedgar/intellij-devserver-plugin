@@ -14,6 +14,7 @@ import com.intellij.ui.components.*;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.deploy.dialog.EditScriptDialog;
 import com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons;
 import com.tanghui.dev.idea.plugin.devserver.ui.HorizontalScrollBarEditor;
@@ -41,17 +42,17 @@ public class ExecuteRightComponent {
     public ExecuteRightComponent(Project project) {
         this.project = project;
         $$$setupUI$$$();
-        this.scriptType.setOnText("脚本");
-        this.scriptType.setOffText("命令");
+        this.scriptType.setOnText(DevServerBundle.INSTANCE.message("script"));
+        this.scriptType.setOffText(DevServerBundle.INSTANCE.message("command"));
         this.editorButton.setIcon(DevServerIcons.DevServer_TOOLBAR_UPDATE);
         this.editorButton.setBorder(null);
         this.editorButton.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String string = scriptType.isSelected() ? "脚本" : "命令";
-                EditScriptDialog runShellScriptDialog = new EditScriptDialog(project, "执行" + string,
+                String string = scriptType.isSelected() ? DevServerBundle.INSTANCE.message("script") : DevServerBundle.INSTANCE.message("command");
+                EditScriptDialog runShellScriptDialog = new EditScriptDialog(project, DevServerBundle.INSTANCE.message("execute") + string,
                         StringUtils.isNotBlank(executeCommand.getText().trim()) ? executeCommand.getText().trim() : "");
-                runShellScriptDialog.setTitle("编辑执行" + string);
+                runShellScriptDialog.setTitle(DevServerBundle.INSTANCE.message("edit.execution") + string);
                 runShellScriptDialog.showAndGet();
                 if (runShellScriptDialog.getEditScript().isEdit()) {
                     String extension = "sh";
@@ -111,7 +112,7 @@ public class ExecuteRightComponent {
         panel5.setPreferredSize(JBUI.size(80, 24));
         panel4.add(panel5, BorderLayout.WEST);
         final JLabel label1 = new JLabel();
-        label1.setText("执行目录");
+        label1.setText(DevServerBundle.INSTANCE.message("execution.directory"));
         panel5.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel6 = new JBPanel();
         panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -129,7 +130,7 @@ public class ExecuteRightComponent {
         panel8.setPreferredSize(JBUI.size(80, 24));
         panel7.add(panel8, BorderLayout.WEST);
         final JLabel label2 = new JLabel();
-        label2.setText("执行用户");
+        label2.setText(DevServerBundle.INSTANCE.message("execution.user"));
         panel8.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel9 = new JBPanel();
         panel9.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

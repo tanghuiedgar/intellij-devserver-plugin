@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.cluster
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.cluster
  * @Author: 唐煇
  * @CreateTime: 2025-12-12-13:37
  * @Description: 集群部署。
@@ -92,14 +92,6 @@ public class ClusterDeployment {
         initComponent();
         initServerTable();
         initScriptTabbedPane();
-        ApplicationManager.getApplication().invokeLater(() -> {
-            if (scriptTabbedPane.getTabCount() > 0 && scriptTabbedPane.getUI() != null) {
-                Rectangle r = scriptTabbedPane.getUI()
-                        .getTabBounds(scriptTabbedPane, 0);
-                int tabHeaderHeight = r.height;
-                panel12.setPreferredSize(JBUI.size(24, tabHeaderHeight));
-            }
-        });
         actionListener();
     }
 
@@ -212,7 +204,7 @@ public class ClusterDeployment {
 
     // 初始化表格
     private void initServerTable() {
-        String[] columns = {"服务器IP", "服务器端口", "连接用户", "操作用户"};
+        String[] columns = DevServerBundle.INSTANCE.message("deploy.server.table.head").split(",");
         DevServerTableModel model = new DevServerTableModel(columns, 0);
         this.devServerTable.getDevServerTableComponent().setModel(model);
         this.serverPanel.add(this.devServerTable.getRoot(), BorderLayout.CENTER);
@@ -243,7 +235,7 @@ public class ClusterDeployment {
                         String serverHost = parentComponent.getServerHost();
                         Optional<DevServerRunConfig> first = runConfigList.stream().filter(v -> serverHost.equals(v.getServerHost()))
                                 .findFirst();
-                        if (!first.isPresent()) {
+                        if (first.isEmpty()) {
                             String serverPort = parentComponent.getServerPort();
                             String serverUser = parentComponent.getServerUser();
                             String controlsUser = parentComponent.getControlsUser();
@@ -294,8 +286,8 @@ public class ClusterDeployment {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 int result = Messages.showYesNoDialog(
-                        "是否删除服务器配置",
-                        "服务器配置",
+                        DevServerBundle.INSTANCE.message("deploy.server.table.head.delete.message"),
+                        DevServerBundle.INSTANCE.message("deploy.server.table.head.delete.title"),
                         DevServerBundle.INSTANCE.message("define", ""),
                         DevServerBundle.INSTANCE.message("cancel", ""),
                         Messages.getWarningIcon()
@@ -327,54 +319,44 @@ public class ClusterDeployment {
             String serverHost = runConfig.getServerHost();
             ExecuteScript executeScript = new ExecuteScript(project, runConfigList, runConfig);
 
-            if (upgradeRadioButton.isSelected()) {
-                executeScript.getRollbackPanel().setVisible(true);
-                executeScript.getLogePanel().setVisible(true);
-                executeScript.getWorkDirectory().setVisible(true);
-            }
-
-            if (uploadRadioButton.isSelected()) {
-                executeScript.getRollbackPanel().setVisible(false);
-                executeScript.getLogePanel().setVisible(false);
-                executeScript.getWorkDirectory().setVisible(true);
-            }
-
-            if (executeRadioButton.isSelected()) {
-                executeScript.getRollbackPanel().setVisible(false);
-                executeScript.getLogePanel().setVisible(false);
-                executeScript.getWorkDirectory().setVisible(false);
-            }
+            setExecuteScript(executeScript);
 
             scriptTabbedPane.addTab(serverHost, executeScript.getRoot());
         }
         scriptTabbedPane.updateUI();
     }
 
-    public void addScriptTabbedPane(List<DevServerRunConfig> runConfigList, DevServerRunConfig devServerRunConfig) {
-
-        ExecuteScript executeScript = new ExecuteScript(project, runConfigList, devServerRunConfig);
+    private void setExecuteScript(ExecuteScript executeScript) {
         if (upgradeRadioButton.isSelected()) {
             executeScript.getRollbackPanel().setVisible(true);
             executeScript.getLogePanel().setVisible(true);
             executeScript.getWorkDirectory().setVisible(true);
         }
+
         if (uploadRadioButton.isSelected()) {
             executeScript.getRollbackPanel().setVisible(false);
             executeScript.getLogePanel().setVisible(false);
             executeScript.getWorkDirectory().setVisible(true);
         }
+
         if (executeRadioButton.isSelected()) {
             executeScript.getRollbackPanel().setVisible(false);
             executeScript.getLogePanel().setVisible(false);
             executeScript.getWorkDirectory().setVisible(false);
         }
+    }
+
+    public void addScriptTabbedPane(List<DevServerRunConfig> runConfigList, DevServerRunConfig devServerRunConfig) {
+
+        ExecuteScript executeScript = new ExecuteScript(project, runConfigList, devServerRunConfig);
+        setExecuteScript(executeScript);
         scriptTabbedPane.addTab(devServerRunConfig.getServerHost(), executeScript.getRoot());
         scriptTabbedPane.updateUI();
         ApplicationManager.getApplication().invokeLater(() -> {
             if (scriptTabbedPane.getTabCount() > 0 && scriptTabbedPane.getUI() != null) {
                 Rectangle r = scriptTabbedPane.getUI()
                         .getTabBounds(scriptTabbedPane, 0);
-                int tabHeaderHeight = r.height;
+                int tabHeaderHeight = r.height - 20;
                 panel12.setPreferredSize(JBUI.size(24, tabHeaderHeight));
             }
         });
@@ -391,7 +373,7 @@ public class ClusterDeployment {
         return ExtendableTextComponent.Extension.create(
                 AllIcons.Nodes.Folder,          // 图标
                 AllIcons.Nodes.Folder,          // hover 图标
-                "选择文件",
+                DevServerBundle.INSTANCE.message("select.file"),
                 () -> {
                     FileChooserDescriptor descriptor =
                             new FileChooserDescriptor(true, false, false, false, false, false);
@@ -442,7 +424,7 @@ public class ClusterDeployment {
         panel2.setPreferredSize(JBUI.size(100, 24));
         panel1.add(panel2, BorderLayout.WEST);
         final JBLabel label1 = new JBLabel();
-        label1.setText("类型");
+        label1.setText(DevServerBundle.INSTANCE.message("deploy.server.type"));
         panel2.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel3 = new JBPanel();
         panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
@@ -451,19 +433,19 @@ public class ClusterDeployment {
         panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panel4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         upgradeRadioButton = new JBRadioButton();
-        upgradeRadioButton.setText("升级");
+        upgradeRadioButton.setText(DevServerBundle.INSTANCE.message("deploy.server.type.upgrade"));
         panel4.add(upgradeRadioButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel5 = new JBPanel();
         panel5.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panel5, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         uploadRadioButton = new JBRadioButton();
-        uploadRadioButton.setText("上传文件");
+        uploadRadioButton.setText(DevServerBundle.INSTANCE.message("deploy.server.type.upload.file"));
         panel5.add(uploadRadioButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel6 = new JBPanel();
         panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panel6, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         executeRadioButton = new JBRadioButton();
-        executeRadioButton.setText("执行命令");
+        executeRadioButton.setText(DevServerBundle.INSTANCE.message("deploy.server.type.execute.command"));
         panel6.add(executeRadioButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         uploadFilePanel = new JBPanel();
         uploadFilePanel.setLayout(new BorderLayout(0, 0));
@@ -478,7 +460,7 @@ public class ClusterDeployment {
         panel7.setPreferredSize(JBUI.size(100, 24));
         uploadFilePanel.add(panel7, BorderLayout.WEST);
         final JBLabel label2 = new JBLabel();
-        label2.setText("文件");
+        label2.setText(DevServerBundle.INSTANCE.message("file"));
         panel7.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         filePanel = new JBPanel();
         filePanel.setLayout(new BorderLayout(0, 0));
@@ -502,7 +484,7 @@ public class ClusterDeployment {
         panel10.setPreferredSize(JBUI.size(24, 40));
         panel9.add(panel10, cc.xy(1, 1));
         final JBLabel label3 = new JBLabel();
-        label3.setText("服务器");
+        label3.setText(DevServerBundle.INSTANCE.message("server"));
         panel10.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         serverPanel = new JBPanel();
         serverPanel.setLayout(new BorderLayout(0, 0));
@@ -532,7 +514,7 @@ public class ClusterDeployment {
         workDirectory.setPreferredSize(JBUI.size(24, 40));
         panel11.add(workDirectory, cc.xy(1, 3));
         final JBLabel label4 = new JBLabel();
-        label4.setText("工作目录");
+        label4.setText(DevServerBundle.INSTANCE.message("working.directory"));
         workDirectory.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel13 = new JBPanel();
         panel13.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -541,7 +523,7 @@ public class ClusterDeployment {
         panel13.setPreferredSize(JBUI.size(24, 200));
         panel11.add(panel13, cc.xy(1, 5));
         final JBLabel label5 = new JBLabel();
-        label5.setText("运行脚本");
+        label5.setText(DevServerBundle.INSTANCE.message("run.script"));
         panel13.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         rollbackPanel = new JBPanel();
         rollbackPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -550,7 +532,7 @@ public class ClusterDeployment {
         rollbackPanel.setPreferredSize(JBUI.size(24, 150));
         panel11.add(rollbackPanel, cc.xy(1, 7));
         final JBLabel label6 = new JBLabel();
-        label6.setText("回退脚本");
+        label6.setText(DevServerBundle.INSTANCE.message("fallback.script"));
         rollbackPanel.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logePanel = new JBPanel();
         logePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -559,7 +541,7 @@ public class ClusterDeployment {
         logePanel.setPreferredSize(JBUI.size(24, 70));
         panel11.add(logePanel, cc.xy(1, 9));
         final JBLabel label7 = new JBLabel();
-        label7.setText("查看日志");
+        label7.setText(DevServerBundle.INSTANCE.message("view.log"));
         logePanel.add(label7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel14 = new JBPanel();
         panel14.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

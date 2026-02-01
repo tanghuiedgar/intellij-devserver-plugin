@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @BelongsPackage: com.tanghui.ui
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui
  * @Author: 唐煇
  * @CreateTime: 2024-05-27 14:03
  * @Description: 描述类的主要功能和用途。

@@ -11,6 +11,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.OperateEnum;
 import com.tanghui.dev.idea.plugin.devserver.ui.server.RemoteServer;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import javax.swing.JComponent;
 import java.awt.*;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.ui.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.dialog.execute
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-16:53
  * @Description: 描述类的主要功能和用途。
@@ -98,7 +99,7 @@ public class EditCommand {
         panel2.setPreferredSize(JBUI.size(80, 24));
         panel1.add(panel2, BorderLayout.WEST);
         final JBLabel label1 = new JBLabel();
-        label1.setText("命令标题");
+        label1.setText(DevServerBundle.INSTANCE.message("command.title"));
         panel2.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel3 = new JBPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -118,7 +119,7 @@ public class EditCommand {
         panel5.setPreferredSize(JBUI.size(80, 24));
         panel4.add(panel5, BorderLayout.WEST);
         final JBLabel label2 = new JBLabel();
-        label2.setText("执行用户");
+        label2.setText(DevServerBundle.INSTANCE.message("execution.user"));
         panel5.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel6 = new JBPanel();
         panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -138,7 +139,7 @@ public class EditCommand {
         panel8.setPreferredSize(JBUI.size(80, 24));
         panel7.add(panel8, BorderLayout.WEST);
         final JBLabel label3 = new JBLabel();
-        label3.setText("执行目录");
+        label3.setText(DevServerBundle.INSTANCE.message("execution.directory"));
         panel8.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel9 = new JBPanel();
         panel9.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -158,7 +159,7 @@ public class EditCommand {
         panel11.setPreferredSize(JBUI.size(80, 24));
         panel10.add(panel11, BorderLayout.WEST);
         final JBLabel label4 = new JBLabel();
-        label4.setText("分组");
+        label4.setText(DevServerBundle.INSTANCE.message("group"));
         panel11.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel12 = new JBPanel();
         panel12.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.code.generator.model
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.data.model
  * @Author: 唐煇
  * @CreateTime: 2025-03-12-14:03
  * @Description: 文件传输model。

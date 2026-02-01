@@ -3,7 +3,7 @@ package com.tanghui.dev.idea.plugin.devserver.data.model;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.common.model
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.data.model
  * @Author: 唐煇
  * @CreateTime: 2025-05-22-11:23
  * @Description: 服务器下拉输入框数据模型。

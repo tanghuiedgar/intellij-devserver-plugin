@@ -2,6 +2,7 @@ package com.tanghui.dev.idea.plugin.devserver.transfer.listener;
 
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.transfer.ui.FileTransfer;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.awt.*;
 import static com.tanghui.dev.idea.plugin.devserver.utils.DurationFormatUtils.autoFormat;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.transfer.listener
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.transfer.listener
  * @Author: 唐煇
  * @CreateTime: 2025-12-03-16:10
  * @Description: 文件传输监听。
@@ -68,7 +69,7 @@ public class FileTransferListener implements TransferListener {
                 this.fileTransfer.getStartOverButton().setEnabled(false);
                 this.fileTransfer.getEndButton().setEnabled(false);
                 this.fileTransfer.setFinish(true);
-                this.fileTransfer.getTimeLeftLabel().setText("已完成");
+                this.fileTransfer.getTimeLeftLabel().setText(DevServerBundle.INSTANCE.message("completed"));
                 this.fileTransfer.getTimeLeftLabel().setFont(JBUI.Fonts.label());
                 this.fileTransfer.getTimeLeftLabel().setForeground(new JBColor(new Color(7, 177, 5), new Color(7, 177, 5)));
 

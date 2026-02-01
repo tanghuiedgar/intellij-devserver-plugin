@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.jar.JarFile;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.tools
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.utils
  * @Author: 唐煇
  * @CreateTime: 2025-06-05-15:21
  * @Description: 描述类的主要功能和用途。

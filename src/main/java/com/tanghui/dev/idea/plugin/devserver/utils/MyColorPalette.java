@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.run
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.utils
  * @Author: 唐煇
  * @CreateTime: 2025-11-17-17:02
  * @Description: 描述类的主要功能和用途。

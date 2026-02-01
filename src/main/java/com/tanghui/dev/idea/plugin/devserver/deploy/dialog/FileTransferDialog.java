@@ -3,6 +3,7 @@ package com.tanghui.dev.idea.plugin.devserver.deploy.dialog;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.task.FileTransferCallback;
@@ -15,7 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.dialog
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-10:28
  * @Description: 描述类的主要功能和用途。
@@ -27,7 +28,7 @@ public class FileTransferDialog extends DialogWrapper {
 
     public FileTransferDialog(Project project, ServerHostModel serverHost, FileTransferCallback transferCallback, FileTransferModel fileTransferModel) {
         super(true);
-        setTitle("文件传输");
+        setTitle(DevServerBundle.INSTANCE.message("file.transfer"));
         this.fileTransfer = new FileTransfer(project, serverHost, transferCallback, fileTransferModel);
         init();
     }

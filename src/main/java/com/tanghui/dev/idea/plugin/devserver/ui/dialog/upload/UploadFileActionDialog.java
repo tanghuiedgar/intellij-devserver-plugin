@@ -6,9 +6,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
-import com.tanghui.dev.idea.plugin.devserver.deploy.dialog.FileTransferDialog;
 import com.tanghui.dev.idea.plugin.devserver.task.FileTransferCallback;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.ui.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.dialog.upload
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-13:42
  * @Description: 描述类的主要功能和用途。
@@ -30,11 +30,8 @@ public class UploadFileActionDialog extends DialogWrapper {
 
     private final Project project;
 
-    private final ServerHostModel serverHostModel;
-
     private final FileTransferModel fileTransferModel;
 
-    private final FileTransferCallback fileTransferCallback;
     @Getter
     private boolean start = false;
 
@@ -43,11 +40,9 @@ public class UploadFileActionDialog extends DialogWrapper {
                                   FileTransferModel fileTransferModel,
                                   FileTransferCallback fileTransferCallback) {
         super(project, true);
-        setTitle("选择上传文件");
+        setTitle(DevServerBundle.INSTANCE.message("select.upload.file"));
         this.project = project;
-        this.serverHostModel = serverHostModel;
         this.fileTransferModel = fileTransferModel;
-        this.fileTransferCallback = fileTransferCallback;
         this.uploadFileAction = new UploadFileAction(project, serverHostModel, fileTransferModel, fileTransferCallback);
         init();
     }
@@ -96,17 +91,6 @@ public class UploadFileActionDialog extends DialogWrapper {
                         }
                     }
                 }
-                String key = project.getBasePath() + project.getName() + serverHostModel.getHost().trim() + fileTransferModel.getRemoteFilesPath() + "upload";
-                /*FileTransferDialog amsUpDialog = projectAMSUpDialog.get(key);
-                if (amsUpDialog == null) {
-                    amsUpDialog = new FileTransferDialog(project, serverHostModel, fileTransferCallback, fileTransferModel);
-                    projectAMSUpDialog.put(key, amsUpDialog);
-                    amsUpDialog.setTitle(serverHostModel.getHost().trim());
-                    amsUpDialog.showAndGet();
-                } else {
-                    amsUpDialog.setTitle(serverHostModel.getHost().trim());
-                    amsUpDialog.showDialogAgain();
-                }*/
                 start = true;
                 dispose();
             }

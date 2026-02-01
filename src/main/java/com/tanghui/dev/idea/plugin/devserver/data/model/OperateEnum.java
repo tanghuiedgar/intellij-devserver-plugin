@@ -1,7 +1,7 @@
 package com.tanghui.dev.idea.plugin.devserver.data.model;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.common.model
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.data.model
  * @Author: 唐煇
  * @CreateTime: 2025-04-21-11:51
  * @Description: 描述类的主要功能和用途。

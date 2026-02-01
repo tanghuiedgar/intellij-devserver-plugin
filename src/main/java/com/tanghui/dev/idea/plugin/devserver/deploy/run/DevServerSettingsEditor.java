@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @BelongsPackage: com.tanghui.run
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.run
  * @Author: 唐煇
  * @CreateTime: 2024-07-19 09:37
  * @Description: 描述类的主要功能和用途。
@@ -97,7 +97,7 @@ public class DevServerSettingsEditor extends SettingsEditor<DevServerRunConfigur
 
     @Override
     protected void applyEditorTo(@NotNull DevServerRunConfiguration s) throws ConfigurationException {
-        //设置RunConfiguration对象的值从文本框中获取
+        //设置 RunConfiguration对象的值从文本框中获取
         String uploadFile = this.devServerRunUI.getTextField().getText().trim();
         s.setUploadFile(uploadFile);
 

@@ -9,6 +9,7 @@ import com.intellij.ui.components.fields.IntegerField;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.OperateEnum;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import javax.swing.JComponent;
 import java.awt.*;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.ui.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.dialog.connectserver
  * @Author: 唐煇
  * @CreateTime: 2025-12-22-09:35
  * @Description: 描述类的主要功能和用途。
@@ -126,7 +127,7 @@ public class ConnectServer {
         panel5.setPreferredSize(JBUI.size(70, 24));
         panel4.add(panel5, BorderLayout.WEST);
         final JBLabel label1 = new JBLabel();
-        label1.setText("主机");
+        label1.setText(DevServerBundle.INSTANCE.message("host"));
         panel5.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel6 = new JBPanel();
         panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -143,7 +144,7 @@ public class ConnectServer {
         panel8.setPreferredSize(JBUI.size(70, 24));
         panel7.add(panel8, BorderLayout.WEST);
         final JBLabel label2 = new JBLabel();
-        label2.setText("端口");
+        label2.setText(DevServerBundle.INSTANCE.message("port"));
         panel8.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel9 = new JBPanel();
         panel9.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -161,7 +162,7 @@ public class ConnectServer {
         panel11.setPreferredSize(JBUI.size(70, 24));
         panel10.add(panel11, BorderLayout.WEST);
         final JBLabel label3 = new JBLabel();
-        label3.setText("用户");
+        label3.setText(DevServerBundle.INSTANCE.message("user"));
         panel11.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel12 = new JBPanel();
         panel12.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -178,7 +179,7 @@ public class ConnectServer {
         panel14.setPreferredSize(JBUI.size(70, 24));
         panel13.add(panel14, BorderLayout.WEST);
         final JBLabel label4 = new JBLabel();
-        label4.setText("密码");
+        label4.setText(DevServerBundle.INSTANCE.message("password"));
         panel14.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel15 = new JBPanel();
         panel15.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -195,7 +196,7 @@ public class ConnectServer {
         panel17.setPreferredSize(JBUI.size(70, 24));
         panel16.add(panel17, BorderLayout.WEST);
         final JBLabel label5 = new JBLabel();
-        label5.setText("分组");
+        label5.setText(DevServerBundle.INSTANCE.message("group"));
         panel17.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel18 = new JBPanel();
         panel18.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -212,7 +213,7 @@ public class ConnectServer {
         panel20.setPreferredSize(JBUI.size(70, 24));
         panel19.add(panel20, BorderLayout.WEST);
         final JBLabel label6 = new JBLabel();
-        label6.setText("描述");
+        label6.setText(DevServerBundle.INSTANCE.message("describe"));
         panel20.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel21 = new JBPanel();
         panel21.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

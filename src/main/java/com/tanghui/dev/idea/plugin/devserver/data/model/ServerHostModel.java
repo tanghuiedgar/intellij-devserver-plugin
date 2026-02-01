@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @BelongsPackage: com.tanghui.ui.model
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.data.model
  * @Author: 唐煇
  * @CreateTime: 2024-11-20-下午2:02
  * @Description: 描述类的主要功能和用途。

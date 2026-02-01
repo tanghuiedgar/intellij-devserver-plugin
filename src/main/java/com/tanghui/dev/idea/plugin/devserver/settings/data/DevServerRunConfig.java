@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * @BelongsPackage: com.tanghui.settings
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.settings.data
  * @Author: 唐煇
  * @CreateTime: 2024-07-19 16:17
  * @Description: 描述类的主要功能和用途。

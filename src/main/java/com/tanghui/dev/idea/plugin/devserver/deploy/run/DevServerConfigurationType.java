@@ -4,6 +4,7 @@ import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ import static com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons.DevServ
 
 
 /**
- * @BelongsPackage: com.tanghui.run
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.run
  * @Author: 唐煇
  * @CreateTime: 2024-07-19 08:59
  * @Description: 描述类的主要功能和用途。
@@ -44,7 +45,7 @@ public class DevServerConfigurationType implements ConfigurationType {
 
     @Override
     public String getConfigurationTypeDescription() {
-        return "DevServer Run Configuration Description";
+        return DevServerBundle.INSTANCE.message("deploy.config.type.description");
     }
 
     @Override

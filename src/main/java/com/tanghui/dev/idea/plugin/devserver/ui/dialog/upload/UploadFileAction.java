@@ -1,11 +1,6 @@
 package com.tanghui.dev.idea.plugin.devserver.ui.dialog.upload;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.fields.ExtendableTextComponent;
@@ -15,18 +10,18 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.deploy.cluster.ClusterDeployment;
 import com.tanghui.dev.idea.plugin.devserver.task.FileTransferCallback;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.JComponent;
 import java.awt.*;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.ui.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui.dialog.upload
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-13:43
  * @Description: 描述类的主要功能和用途。
@@ -94,13 +89,13 @@ public class UploadFileAction {
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 30, 0, 0), -1, -1));
         panel1.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         currentFile = new JBRadioButton();
-        currentFile.setText("当前文件");
+        currentFile.setText(DevServerBundle.INSTANCE.message("current.file"));
         panel2.add(currentFile, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JBPanel panel3 = new JBPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 30, 0, 0), -1, -1));
         panel1.add(panel3, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         otherFile = new JBRadioButton();
-        otherFile.setText("其他文件");
+        otherFile.setText(DevServerBundle.INSTANCE.message("other.file"));
         panel3.add(otherFile, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         uploadFile = new JBPanel();
         uploadFile.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

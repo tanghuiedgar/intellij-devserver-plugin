@@ -20,7 +20,7 @@ import javax.swing.JComponent;
 import java.awt.*;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.dialog
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-15:51
  * @Description: 描述类的主要功能和用途。

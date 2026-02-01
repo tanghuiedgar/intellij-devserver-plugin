@@ -3,7 +3,6 @@ package com.tanghui.dev.idea.plugin.devserver.transfer.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
-import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.connect.transfer.ui
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.transfer.ui
  * @Author: 唐煇
  * @CreateTime: 2025-12-10-11:42
  * @Description: 多文件传输ui。

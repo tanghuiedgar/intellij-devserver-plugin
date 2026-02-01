@@ -32,7 +32,7 @@ import java.util.Vector;
 import static com.tanghui.dev.idea.plugin.devserver.utils.DevServerUtil.createActionToolBar;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.ui
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.ui
  * @Author: 唐煇
  * @CreateTime: 2025-09-16-09:49
  * @Description: DevServer自定义表格组件。

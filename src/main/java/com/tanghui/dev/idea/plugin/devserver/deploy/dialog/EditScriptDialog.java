@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.dialog
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-15:50
  * @Description: 描述类的主要功能和用途。
@@ -51,8 +51,8 @@ public class EditScriptDialog extends DialogWrapper {
             public void actionPerformed(ActionEvent e) {
                 if (!editScript.getContent().equals(editScript.getShellScriptEditor().getText())) {
                     int result = Messages.showYesNoDialog(
-                            "确认修改脚本",
-                            "修改脚本",
+                            DevServerBundle.INSTANCE.message("modify.script.message"),
+                            DevServerBundle.INSTANCE.message("modify.script.title"),
                             DevServerBundle.INSTANCE.message("define", ""),
                             DevServerBundle.INSTANCE.message("cancel", ""),
                             Messages.getQuestionIcon()

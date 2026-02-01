@@ -1,7 +1,7 @@
 package com.tanghui.dev.idea.plugin.devserver.task;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.common.task
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.task
  * @Author: 唐煇
  * @CreateTime: 2025-03-12-11:49
  * @Description: 文件传输回调接口。

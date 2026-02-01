@@ -120,14 +120,14 @@ public class RemoteServer implements Disposable {
 
     private static int terminalSize = 0;
 
-    private static Map<String, FileTransfer> fileTransfers = new LinkedHashMap<>();
+    private static final Map<String, FileTransfer> fileTransfers = new LinkedHashMap<>();
 
     public RemoteServer(Project project, Disposable parentDisposable) {
         this.project = project;
         this.parentDisposable = parentDisposable;
         this.splitter = new Splitter(true, 0.5f);
         this.lastLeft = new LastLeftComponent(project);
-        this.lastRight = new LastRightComponent(project, this.lastLeft.getServerTree(), parentDisposable);
+        this.lastRight = new LastRightComponent(project, this.lastLeft.getServerTree());
         initLastComponent();
         initNextComponent();
         splitter.setFirstComponent(lastComponent);
@@ -162,7 +162,8 @@ public class RemoteServer implements Disposable {
 
     /**
      * serverNode: 选择的节点
-     * */
+     *
+     */
     public void initCommandTree(JTree serverHostTree, JSONObject serverNode) {
         if (hostModels != null && !hostModels.isEmpty()) {
             TreePath selectedPath = serverHostTree.getSelectionPath();
@@ -178,7 +179,9 @@ public class RemoteServer implements Disposable {
                     .findFirst()
                     .ifPresent(v -> {
                         String command = v.getCommand();
-                        ServerHostTreeNode defaultMutableTreeNode = new ServerHostTreeNode("执行命令", DevServerIcons.DevServer_APP);
+                        ServerHostTreeNode defaultMutableTreeNode = new ServerHostTreeNode(
+                                DevServerBundle.INSTANCE.message("deploy.server.type.execute.command"),
+                                DevServerIcons.DevServer_APP);
                         AtomicReference<ServerHostTreeNode> serverHostTreeNodeTemp = new AtomicReference<>();
                         if (StringUtils.isNotBlank(command)) {
                             JSONArray objects = JSON.parseArray(command);
@@ -310,7 +313,8 @@ public class RemoteServer implements Disposable {
     public void addNewTerminalTab(String title, JComponent terminal) {
         if (terminalSize >= 6) {
             NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                    .createNotification("打开终端", "当前打开终端过多，请关闭没有使用的终端", NotificationType.WARNING)
+                    .createNotification(DevServerBundle.INSTANCE.message("open.terminal.title"),
+                            DevServerBundle.INSTANCE.message("open.terminal.content"), NotificationType.WARNING)
                     .notify(project);
             return;
         }
@@ -328,7 +332,8 @@ public class RemoteServer implements Disposable {
         // 我们创建一个 ActionGroup，里面放一个关闭动作。
         // JBEditorTabs 会自动在 Tab 标题右侧渲染这个 ActionGroup。
         DefaultActionGroup closeActionGroup = new DefaultActionGroup();
-        closeActionGroup.add(new AnAction("在终端打开", "在终端打开", DevServerIcons.DevServer_TOOLBAR_TERMINAL) {
+        closeActionGroup.add(new AnAction(DevServerBundle.INSTANCE.message("open.in.terminal.title")
+                , DevServerBundle.INSTANCE.message("open.in.terminal.title"), DevServerIcons.DevServer_TOOLBAR_TERMINAL) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 执行移除逻辑
@@ -355,7 +360,8 @@ public class RemoteServer implements Disposable {
                 terminalSize--;
             }
         });
-        closeActionGroup.add(new AnAction("关闭", "关闭当前终端", DevServerIcons.DevServer_CLOSE) {
+        closeActionGroup.add(new AnAction(DevServerBundle.INSTANCE.message("close"),
+                DevServerBundle.INSTANCE.message("close.current.terminal"), DevServerIcons.DevServer_CLOSE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 执行移除逻辑
@@ -363,7 +369,8 @@ public class RemoteServer implements Disposable {
                 terminalSize--;
             }
         });
-        closeActionGroup.add(new AnAction("清空", "关闭所有终端", DevServerIcons.DevServer_CLEAR) {
+        closeActionGroup.add(new AnAction(DevServerBundle.INSTANCE.message("clear"),
+                DevServerBundle.INSTANCE.message("close.all.terminal"), DevServerIcons.DevServer_CLEAR) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 执行移除逻辑
@@ -383,7 +390,8 @@ public class RemoteServer implements Disposable {
      * 初始化 serverHostTree
      */
     public static void initServerHostTree(LastRightComponent lastRight, JTree serverHostTree) {
-        ServerHostTreeNode defaultMutableTreeNode = new ServerHostTreeNode("服务器", DevServerIcons.DevServer_APP);
+        ServerHostTreeNode defaultMutableTreeNode = new ServerHostTreeNode(DevServerBundle.INSTANCE.message("server")
+                , DevServerIcons.DevServer_APP);
         // 查询保存的服务器
         hostModels.clear();
         Path configDir = PathManager.getConfigDir();
@@ -518,17 +526,19 @@ public class RemoteServer implements Disposable {
     private void initServerOperateToolbar() {
         // 添加工具栏
         List<AnAction> consoleActions = new ArrayList<>();
-        AnAction saveAction = new AnAction("保存", "", DevServerIcons.DevServer_TOOLBAR_SAVE) {
+        AnAction saveAction = new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.save"),
+                "", DevServerIcons.DevServer_TOOLBAR_SAVE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 if (hostModels != null && !hostModels.isEmpty()) {
                     saveServerHost(hostModels);
                 } else {
-                    Messages.showErrorDialog(project, "服务器信息不能为空！", "服务器保存");
+                    Messages.showErrorDialog(project, DevServerBundle.INSTANCE.message("server.info.check.message"),
+                            DevServerBundle.INSTANCE.message("server.save.title"));
                 }
             }
         };
-        AnAction refreshAction = new AnAction("刷新", "", DevServerIcons.DevServer_RESTART) {
+        AnAction refreshAction = new AnAction(DevServerBundle.INSTANCE.message("refresh"), "", DevServerIcons.DevServer_RESTART) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 nextComponent.setVisible(false);
@@ -540,7 +550,8 @@ public class RemoteServer implements Disposable {
                 GlobalSshPoolManager.shutdownAll();
             }
         };
-        consoleActions.add(new AnAction("新增", "", DevServerIcons.DevServer_TOOLBAR_ADD) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.add"),
+                "", DevServerIcons.DevServer_TOOLBAR_ADD) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 ServerHostModel serverHostModel = new ServerHostModel();
@@ -553,7 +564,8 @@ public class RemoteServer implements Disposable {
                 }
             }
         });
-        consoleActions.add(new AnAction("修改", "", DevServerIcons.DevServer_TOOLBAR_UPDATE) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.update"),
+                "", DevServerIcons.DevServer_TOOLBAR_UPDATE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 TreePath selectionModel = lastLeft.getServerTree().getSelectionPath();
@@ -579,7 +591,8 @@ public class RemoteServer implements Disposable {
                 }
             }
         });
-        consoleActions.add(new AnAction("删除", "", DevServerIcons.DevServer_TOOLBAR_DELETE) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.delete"),
+                "", DevServerIcons.DevServer_TOOLBAR_DELETE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 TreePath selectionModel = lastLeft.getServerTree().getSelectionPath();
@@ -604,7 +617,7 @@ public class RemoteServer implements Disposable {
         });
         consoleActions.add(saveAction);
         consoleActions.add(refreshAction);
-        consoleActions.add(new AnAction("展开", "", DevServerIcons.DevServer_EXPAND_DARK) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("expand"), "", DevServerIcons.DevServer_EXPAND_DARK) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 TreePath sel = lastLeft.getServerTree().getSelectionPath();
@@ -620,6 +633,7 @@ public class RemoteServer implements Disposable {
                     }
                 }
             }
+
             @Override
             public @NotNull ActionUpdateThread getActionUpdateThread() {
                 return ActionUpdateThread.EDT;
@@ -642,7 +656,7 @@ public class RemoteServer implements Disposable {
             }
 
         });
-        consoleActions.add(new AnAction("折叠", "", DevServerIcons.DevServer_COLLAPSE_DARK) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("fold"), "", DevServerIcons.DevServer_COLLAPSE_DARK) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 TreePath sel = lastLeft.getServerTree().getSelectionPath();
@@ -687,7 +701,7 @@ public class RemoteServer implements Disposable {
 
     private void initOperateBar() {
         List<AnAction> consoleActions = new ArrayList<>();
-        consoleActions.add(new AnAction("连接", "", DevServerIcons.DevServer_TOOLBAR_CONNECTION) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("connect"), "", DevServerIcons.DevServer_TOOLBAR_CONNECTION) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 获取 ip 和用户名
@@ -696,7 +710,7 @@ public class RemoteServer implements Disposable {
                 hostModels.stream()
                         .filter(v -> serverHost.equals(v.getHost()) && userName.equals(v.getUserName()))
                         .findFirst()
-                        .ifPresent(v -> new Task.Backgroundable(project, "连接服务器") {
+                        .ifPresent(v -> new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("connect.server")) {
                             @Override
                             public void run(@NotNull ProgressIndicator progressIndicator) {
                                 progressIndicator.setIndeterminate(true);
@@ -729,18 +743,23 @@ public class RemoteServer implements Disposable {
                                             serverDirectoryTree.updateUI();
                                         });
                                         lastRight.getServerPanel().setVisible(true);
-                                        String text = "服务器连接成功！";
+                                        String text = DevServerBundle.INSTANCE.message("server.connect.success");
                                         NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                                                .createNotification("服务器连接", text, NotificationType.INFORMATION)
+                                                .createNotification(DevServerBundle.INSTANCE.message("server.connect.title"),
+                                                        text, NotificationType.INFORMATION)
                                                 .notify(project);
                                     } else {
-                                        ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(project, "服务器连接失败！", "服务器连接", Messages.getErrorIcon()));
+                                        ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(project,
+                                                DevServerBundle.INSTANCE.message("server.connect.error"),
+                                                DevServerBundle.INSTANCE.message("server.connect.title"), Messages.getErrorIcon()));
                                     }
                                 } catch (ProcessCanceledException pce) {
                                     // 必须重新抛出
                                     throw pce;
                                 } catch (Exception exception) {
-                                    ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(project, "服务器连接失败！", "服务器连接", Messages.getErrorIcon()));
+                                    ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(project,
+                                            DevServerBundle.INSTANCE.message("server.connect.error"),
+                                            DevServerBundle.INSTANCE.message("server.connect.title"), Messages.getErrorIcon()));
                                 } finally {
                                     pool.release(sshClient);
                                 }
@@ -748,7 +767,7 @@ public class RemoteServer implements Disposable {
                         }.queue());
             }
         });
-        consoleActions.add(new AnAction("终端", "", DevServerIcons.DevServer_TOOLBAR_TERMINAL) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("terminal"), "", DevServerIcons.DevServer_TOOLBAR_TERMINAL) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 获取 ip 和用户名
@@ -799,10 +818,10 @@ public class RemoteServer implements Disposable {
             public void update(@NotNull AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
                 if (LastRightComponent.passwordShow) {
-                    presentation.setText("隐藏");
+                    presentation.setText(DevServerBundle.INSTANCE.message("buried"));
                     presentation.setIcon(DevServerIcons.DevServer_TOOLBAR_HIDE);
                 } else {
-                    presentation.setText("显示");
+                    presentation.setText(DevServerBundle.INSTANCE.message("display"));
                     presentation.setIcon(DevServerIcons.DevServer_TOOLBAR_SHOW);
                 }
             }
@@ -827,7 +846,8 @@ public class RemoteServer implements Disposable {
 
     public void initServerFileOperationToolbar() {
         List<AnAction> consoleActions = new ArrayList<>();
-        AnAction openAction = new AnAction("打开文件", "", DevServerIcons.DevServer_TOOLBAR_OPENFILE) {
+        AnAction openAction = new AnAction(DevServerBundle.INSTANCE.message("server.host.open.file"),
+                "", DevServerIcons.DevServer_TOOLBAR_OPENFILE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 JBList<ServerHostFileModel> directoryList = lastRight.getDirectoryList().getDirectoryList();
@@ -840,10 +860,10 @@ public class RemoteServer implements Disposable {
                     return;
                 }
                 Optional<ServerHostModel> hostFirst = findSelectedHostModel();
-                if (!hostFirst.isPresent()) {
+                if (hostFirst.isEmpty()) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                    "请连接正确的服务器", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -853,7 +873,7 @@ public class RemoteServer implements Disposable {
                 if (path.length <= 1) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                    "请连接正确的文件目录", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.directory.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -865,7 +885,7 @@ public class RemoteServer implements Disposable {
                     // 大于 3MB
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                    "文件大于3MB，不要直接打开，请先下载之后再打开", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.host.open.file.content"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -888,29 +908,34 @@ public class RemoteServer implements Disposable {
                     // 1. 创建父目录（如果不存在）
                     try {
                         Files.createDirectories(fileLocalPath.getParent());
-                    } catch (IOException ex) {
+                    } catch (IOException ignored) {
                     }
                     // 2. 创建文件（如果不存在）
                     if (Files.notExists(fileLocalPath)) {
                         try {
                             Files.createFile(fileLocalPath);
-                        } catch (IOException ex) {
+                        } catch (IOException ignored) {
                         }
                     }
                 }
 
-                new Task.Backgroundable(project, "正在打开服务器文件...") {
+                new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("server.host.open.file.info")) {
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
                         indicator.setIndeterminate(true);
+
+                        SshConnectionPool pool = GlobalSshPoolManager.getPool(
+                                hostModel.getHost(),
+                                hostModel.getPort(),
+                                hostModel.getUserName(),
+                                hostModel.getPassword()
+                        );
+                        SSHClient ssh = null;
                         try {
-                            SshConnectionPool pool = GlobalSshPoolManager.getPool(
-                                    hostModel.getHost(),
-                                    hostModel.getPort(),
-                                    hostModel.getUserName(),
-                                    hostModel.getPassword()
-                            );
-                            SSHClient ssh = pool.borrow();
+                            ssh = pool.borrow();
+                        } catch (Exception ignored) {
+                        }
+                        if (ssh != null) {
                             try (SFTPClient sftp = ssh.newSFTPClient()) {
                                 sftp.get(remoteFilePath, localFilePath);
                                 // 下载完成打开文件
@@ -927,7 +952,7 @@ public class RemoteServer implements Disposable {
                                         FileType[] allFileTypes = fileTypeManager.getRegisteredFileTypes();
                                         String extension = file.getExtension();
                                         for (FileType fileTypeTemp : allFileTypes) {
-                                            if (extension.equals(fileTypeTemp.getDefaultExtension())) {
+                                            if (extension != null && extension.equals(fileTypeTemp.getDefaultExtension())) {
                                                 allowOpen = true;
                                                 break;
                                             }
@@ -955,30 +980,27 @@ public class RemoteServer implements Disposable {
                             } catch (IOException e) {
                                 NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                                         .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                                "打开文件失败！", NotificationType.WARNING)
+                                                DevServerBundle.INSTANCE.message("server.host.open.file.error"),
+                                                NotificationType.WARNING)
                                         .notify(project);
                             } finally {
                                 pool.release(ssh);
                             }
-                        } catch (Exception e) {
-                            NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                                    .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                            "打开文件失败！", NotificationType.WARNING)
-                                    .notify(project);
                         }
                     }
                 }.queue();
 
             }
         };
-        AnAction uploadAction = new AnAction("上传文件", "", DevServerIcons.DevServer_TOOLBAR_UPLOAD) {
+        AnAction uploadAction = new AnAction(DevServerBundle.INSTANCE.message("deploy.server.type.upload.file"), "", DevServerIcons.DevServer_TOOLBAR_UPLOAD) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 Optional<ServerHostModel> hostFirst = findSelectedHostModel();
-                if (!hostFirst.isPresent()) {
+                if (hostFirst.isEmpty()) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                    "请连接正确的服务器", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.message"),
+                                    NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -988,7 +1010,8 @@ public class RemoteServer implements Disposable {
                 if (path.length <= 1) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                    "请连接正确的文件目录", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.directory.message"),
+                                    NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1048,7 +1071,7 @@ public class RemoteServer implements Disposable {
                         lastRight.getServerInfoTabbedPane().setSelectedIndex(0);
                         NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                                 .createNotification(DevServerBundle.INSTANCE.message("server.host.upload.file", ""),
-                                        "文件上传完成！", NotificationType.INFORMATION)
+                                        DevServerBundle.INSTANCE.message("upload.file.server.finish.message"), NotificationType.INFORMATION)
                                 .notify(project);
                     }
 
@@ -1056,11 +1079,11 @@ public class RemoteServer implements Disposable {
                     public void stopTransfer() {
                         NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                                 .createNotification(DevServerBundle.INSTANCE.message("server.host.upload.file", ""),
-                                        "文件上传终止！", NotificationType.WARNING)
+                                        DevServerBundle.INSTANCE.message("upload.file.server.end.message"), NotificationType.WARNING)
                                 .notify(project);
                         fileTransfers.remove(uuid);
                         refreshFileTransfersPanel(jPanel, fileTransfers, 400, 5);
-                        if (fileTransfers.size() <= 0) {
+                        if (fileTransfers.isEmpty()) {
                             lastRight.getServerInfoTabbedPane().remove(3);
                         }
                         lastRight.getServerInfoTabbedPane().setSelectedIndex(0);
@@ -1069,12 +1092,12 @@ public class RemoteServer implements Disposable {
                 UploadFileActionDialog uploadFileAction = new UploadFileActionDialog(project, hostModel, fileTransferModel, fileTransferCallback);
                 uploadFileAction.showAndGet();
                 if (uploadFileAction.isStart()) {
-                    if (lastRight.hasTabByTitle("传输")) {
+                    if (lastRight.hasTabByTitle(DevServerBundle.INSTANCE.message("transfer"))) {
                         jPanel = new JPanel();
                         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
                         JBScrollPane jbScrollPane = new JBScrollPane();
                         jbScrollPane.setViewportView(jPanel);
-                        lastRight.getServerInfoTabbedPane().add("传输", jbScrollPane);
+                        lastRight.getServerInfoTabbedPane().add(DevServerBundle.INSTANCE.message("transfer"), jbScrollPane);
                     }
                     FileTransfer fileTransfer = new FileTransfer(project, hostModel, fileTransferCallback, fileTransferModel);
                     fileTransfers.put(uuid, fileTransfer);
@@ -1083,14 +1106,15 @@ public class RemoteServer implements Disposable {
                 }
             }
         };
-        AnAction downloadAction = new AnAction("下载文件", "", DevServerIcons.DevServer_DOWNLOAD) {
+        AnAction downloadAction = new AnAction(DevServerBundle.INSTANCE.message("server.host.download.file"), "", DevServerIcons.DevServer_DOWNLOAD) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 Optional<ServerHostModel> hostFirst = findSelectedHostModel();
-                if (!hostFirst.isPresent()) {
+                if (hostFirst.isEmpty()) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.download.file", ""),
-                                    "请连接正确的服务器", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.message"),
+                                    NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1100,7 +1124,8 @@ public class RemoteServer implements Disposable {
                 if (path.length <= 1) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.download.file", ""),
-                                    "请连接正确的文件目录", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.directory.message"),
+                                    NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1188,13 +1213,14 @@ public class RemoteServer implements Disposable {
                                     // 打开文件
                                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                                             .createNotification(DevServerBundle.INSTANCE.message("server.host.download.file", ""),
-                                                    "文件下载完成！", NotificationType.INFORMATION)
+                                                    DevServerBundle.INSTANCE.message("server.host.download.file.finish.message"),
+                                                    NotificationType.INFORMATION)
                                             .notify(project);
 
                                     ApplicationManager.getApplication().executeOnPooledThread(() -> {
                                         fileTransfers.remove(uuid);
                                         refreshFileTransfersPanel(jPanel, fileTransfers, 400, 5);
-                                        if (fileTransfers.size() <= 0) {
+                                        if (fileTransfers.isEmpty()) {
                                             lastRight.getServerInfoTabbedPane().remove(3);
                                         }
                                         if (StringUtils.isNotBlank(finalRemoteFileName) && selectedRow < 0) {
@@ -1237,21 +1263,22 @@ public class RemoteServer implements Disposable {
                                 public void stopTransfer() {
                                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                                             .createNotification(DevServerBundle.INSTANCE.message("server.host.download.file", ""),
-                                                    "文件下载终止！", NotificationType.WARNING)
+                                                    DevServerBundle.INSTANCE.message("server.host.download.file.end.message"),
+                                                    NotificationType.WARNING)
                                             .notify(project);
                                     fileTransfers.remove(uuid);
                                     refreshFileTransfersPanel(jPanel, fileTransfers, 400, 5);
-                                    if (fileTransfers.size() <= 0) {
+                                    if (fileTransfers.isEmpty()) {
                                         lastRight.getServerInfoTabbedPane().remove(3);
                                     }
                                 }
                             };
-                            if (lastRight.hasTabByTitle("传输")) {
+                            if (lastRight.hasTabByTitle(DevServerBundle.INSTANCE.message("transfer"))) {
                                 jPanel = new JPanel();
                                 jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
                                 JBScrollPane jbScrollPane = new JBScrollPane();
                                 jbScrollPane.setViewportView(jPanel);
-                                lastRight.getServerInfoTabbedPane().add("传输", jbScrollPane);
+                                lastRight.getServerInfoTabbedPane().add(DevServerBundle.INSTANCE.message("transfer"), jbScrollPane);
                             }
                             FileTransfer fileTransfer = new FileTransfer(project, hostModel, fileTransferCallback, fileTransferModel);
                             fileTransfers.put(uuid, fileTransfer);
@@ -1262,14 +1289,15 @@ public class RemoteServer implements Disposable {
                 });
             }
         };
-        AnAction renameAction = new AnAction("重命名文件", "", DevServerIcons.DevServer_TOOLBAR_RENAME) {
+        AnAction renameAction = new AnAction(DevServerBundle.INSTANCE.message("server.host.rename.file"),
+                "", DevServerIcons.DevServer_TOOLBAR_RENAME) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 Optional<ServerHostModel> hostFirst = findSelectedHostModel();
-                if (!hostFirst.isPresent()) {
+                if (hostFirst.isEmpty()) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                    "请连接正确的服务器", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1279,7 +1307,7 @@ public class RemoteServer implements Disposable {
                 if (path.length <= 1) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.open.file", ""),
-                                    "请连接正确的文件目录", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.directory.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1319,27 +1347,28 @@ public class RemoteServer implements Disposable {
                     }
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.rename.file", ""),
-                                    DevServerBundle.INSTANCE.message("文件重命名完成！", ""), NotificationType.INFORMATION)
+                                    DevServerBundle.INSTANCE.message(DevServerBundle.INSTANCE.message("server.host.rename.file.finish.message"), ""), NotificationType.INFORMATION)
                             .notify(project);
                 }
             }
         };
 
-        AnAction correctAction = new AnAction("修改文件", "", DevServerIcons.DevServer_TOOLBAR_UPDATE) {
+        AnAction correctAction = new AnAction(DevServerBundle.INSTANCE.message("server.host.modify.file"),
+                "", DevServerIcons.DevServer_TOOLBAR_UPDATE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
 
             }
         };
 
-        AnAction deleteAction = new AnAction("删除文件", "", DevServerIcons.DevServer_CLEAR) {
+        AnAction deleteAction = new AnAction(DevServerBundle.INSTANCE.message("server.host.delete.file"), "", DevServerIcons.DevServer_CLEAR) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 Optional<ServerHostModel> hostFirst = findSelectedHostModel();
-                if (!hostFirst.isPresent()) {
+                if (hostFirst.isEmpty()) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.delete.file", ""),
-                                    "请连接正确的服务器", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1349,7 +1378,7 @@ public class RemoteServer implements Disposable {
                 if (path.length <= 1) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                             .createNotification(DevServerBundle.INSTANCE.message("server.host.delete.file", ""),
-                                    "请连接正确的文件目录", NotificationType.WARNING)
+                                    DevServerBundle.INSTANCE.message("server.connect.success.directory.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1392,7 +1421,7 @@ public class RemoteServer implements Disposable {
                             }
                             NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
                                     .createNotification(DevServerBundle.INSTANCE.message("server.host.delete.file", ""),
-                                            "文件删除完成！", NotificationType.INFORMATION)
+                                            DevServerBundle.INSTANCE.message("server.host.modify.file.finish.message"), NotificationType.INFORMATION)
                                     .notify(project);
                         }
                     }
@@ -1418,10 +1447,10 @@ public class RemoteServer implements Disposable {
     /**
      * 刷新 FileTransfer 列表面板
      *
-     * @param panel  承载 FileTransfer 的 JPanel，布局必须是 BoxLayout Y_AXIS
+     * @param panel         承载 FileTransfer 的 JPanel，布局必须是 BoxLayout Y_AXIS
      * @param fileTransfers 按插入顺序的 FileTransfer Map
-     * @param rowHeight 每行 FileTransfer 组件的高度
-     * @param spacing 组件上下间距
+     * @param rowHeight     每行 FileTransfer 组件的高度
+     * @param spacing       组件上下间距
      */
     public static void refreshFileTransfersPanel(JPanel panel,
                                                  Map<String, FileTransfer> fileTransfers,
@@ -1459,28 +1488,28 @@ public class RemoteServer implements Disposable {
         RemoteServer command = this;
         // 添加工具栏
         List<AnAction> consoleActions = new ArrayList<>();
-        consoleActions.add(new AnAction("新增", "", DevServerIcons.DevServer_TOOLBAR_ADD) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.add"), "", DevServerIcons.DevServer_TOOLBAR_ADD) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 EditCommandDialog editCommand = new EditCommandDialog(project, command, OperateEnum.ADD);
                 editCommand.showAndGet();
             }
         });
-        consoleActions.add(new AnAction("修改", "", DevServerIcons.DevServer_TOOLBAR_UPDATE) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.update"), "", DevServerIcons.DevServer_TOOLBAR_UPDATE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 EditCommandDialog editCommand = new EditCommandDialog(project, command, OperateEnum.UPDATE);
                 editCommand.showAndGet();
             }
         });
-        consoleActions.add(new AnAction("删除", "", DevServerIcons.DevServer_TOOLBAR_DELETE) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.delete"), "", DevServerIcons.DevServer_TOOLBAR_DELETE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 EditCommandDialog editCommand = new EditCommandDialog(project, command, OperateEnum.DELETE);
                 editCommand.showAndGet();
             }
         });
-        consoleActions.add(new AnAction("保存", "", DevServerIcons.DevServer_SAVE) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("sql.field.type.mapper.save"), "", DevServerIcons.DevServer_SAVE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 获取脚本类型
@@ -1494,7 +1523,7 @@ public class RemoteServer implements Disposable {
                         .findFirst();
                 if (hostModelOpt.isEmpty()) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                            .createNotification("服务器", "没有要保存的命令", NotificationType.WARNING)
+                            .createNotification(DevServerBundle.INSTANCE.message("server"), DevServerBundle.INSTANCE.message("sql.field.type.mapper.save.no.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1504,7 +1533,7 @@ public class RemoteServer implements Disposable {
                 JSONObject selectedCommandJson = command.getSelectedCommandJson(command.getLastLeft().getServerTree(), command.getLastRight().getExecuteLeft().getCommandTree());
                 if (selectedCommandJson == null) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                            .createNotification("服务器", "没有要保存的命令", NotificationType.WARNING)
+                            .createNotification(DevServerBundle.INSTANCE.message("server"), DevServerBundle.INSTANCE.message("sql.field.type.mapper.save.no.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1523,11 +1552,12 @@ public class RemoteServer implements Disposable {
                 serverHostModel.setCommand(objects.toJSONString());
                 saveServerHost(hostModels);
                 NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                        .createNotification("服务器详情", "服务器详情保存成功", NotificationType.INFORMATION)
+                        .createNotification(DevServerBundle.INSTANCE.message("server.detail.title"),
+                                DevServerBundle.INSTANCE.message("server.detail.success"), NotificationType.INFORMATION)
                         .notify(project);
             }
         });
-        consoleActions.add(new AnAction("执行命令", "", DevServerIcons.DevServer_TOOLBAR_EXECUTE) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("deploy.server.type.execute.command"), "", DevServerIcons.DevServer_TOOLBAR_EXECUTE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 ExecuteRightComponent executeRight = lastRight.getExecuteRight();
@@ -1538,7 +1568,8 @@ public class RemoteServer implements Disposable {
                         .findFirst();
                 if (hostModelOpt.isEmpty()) {
                     NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                            .createNotification("服务器", "没有要执行命令的服务器", NotificationType.WARNING)
+                            .createNotification(DevServerBundle.INSTANCE.message("server"),
+                                    DevServerBundle.INSTANCE.message("deploy.server.type.execute.command.no.message"), NotificationType.WARNING)
                             .notify(project);
                     return;
                 }
@@ -1593,7 +1624,7 @@ public class RemoteServer implements Disposable {
             }
         });
         Tree commandTree = lastRight.getExecuteLeft().getCommandTree();
-        consoleActions.add(new AnAction("展开", "", DevServerIcons.DevServer_EXPAND_DARK) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("expand"), "", DevServerIcons.DevServer_EXPAND_DARK) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 TreePath sel = commandTree.getSelectionPath();
@@ -1631,7 +1662,7 @@ public class RemoteServer implements Disposable {
                 }
             }
         });
-        consoleActions.add(new AnAction("折叠", "", DevServerIcons.DevServer_COLLAPSE_DARK) {
+        consoleActions.add(new AnAction(DevServerBundle.INSTANCE.message("fold"), "", DevServerIcons.DevServer_COLLAPSE_DARK) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 TreePath sel = commandTree.getSelectionPath();
@@ -1695,7 +1726,7 @@ public class RemoteServer implements Disposable {
         Optional<ServerHostModel> hostModelOpt = hostModels.stream()
                 .filter(v -> hostName.equals(v.getHost()))
                 .findFirst();
-        if (!hostModelOpt.isPresent()) {
+        if (hostModelOpt.isEmpty()) {
             return null;
         }
         ServerHostModel hostModel = hostModelOpt.get();

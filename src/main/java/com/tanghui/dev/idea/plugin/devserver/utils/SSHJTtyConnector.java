@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.run
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.utils
  * @Author: 唐煇
  * @CreateTime: 2025-11-14-10:43
  * @Description: sshj实现终端远程交互。

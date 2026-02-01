@@ -18,7 +18,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons;
 import com.tanghui.dev.idea.plugin.devserver.pool.GlobalSshPoolManager;
 import com.tanghui.dev.idea.plugin.devserver.pool.SshConnectionPool;
@@ -45,7 +45,7 @@ import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.fileExi
 
 
 /**
- * @BelongsPackage: com.tanghuidev.idea.plugin.deploy.dialog
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.dialog
  * @Author: 唐煇
  * @CreateTime: 2026-01-20-14:21
  * @Description: 描述类的主要功能和用途。
@@ -70,9 +70,9 @@ public class RunShellScript {
             list.forEach(v -> serverListComboBox.addItem(v));
         }
         uploadLabel.setText("");
-        uploadButton.setToolTipText("上传脚本到服务器");
+        uploadButton.setToolTipText(DevServerBundle.INSTANCE.message("upload.script.server"));
         uploadButton.setIcon(DevServerIcons.DevServer_UPLOAD);
-        saveButton.setToolTipText("保存脚本");
+        saveButton.setToolTipText(DevServerBundle.INSTANCE.message("save.script"));
         saveButton.setIcon(DevServerIcons.DevServer_SAVE);
 
         ApplicationManager.getApplication().invokeAndWait(() -> {
@@ -99,7 +99,7 @@ public class RunShellScript {
 
         uploadButton.addActionListener(e -> {
             if (CollectionUtils.isNotEmpty(runConfigList)) {
-                uploadLabel.setText("文件正在上传，请稍后...");
+                uploadLabel.setText(DevServerBundle.INSTANCE.message("upload.file.server.info"));
                 SwingUtilities.invokeLater(() -> {
                     // 获取文件下拉框选择服务器
                     String server = (String) serverListComboBox.getSelectedItem();
@@ -116,7 +116,7 @@ public class RunShellScript {
                         try {
                             // 创建会话并连接
                             ssh = pool.borrow();
-                            // 创建SFTP通道并连接
+                            // 创建 SFTP通道并连接
                             session = ssh.startSession();
                             Session.Shell shell = session.startShell();
                             if (fileExists(ssh, targetDirectory + "/" + shellName)) {
@@ -169,35 +169,35 @@ public class RunShellScript {
                                 if (fileExists(ssh, targetDirectory + "/" + shellName)) {
                                     // 第一次上传文件时删除已经存在的文件
                                     Messages.showMessageDialog(
-                                            "文件上传成功！",
-                                            "Host",
+                                            DevServerBundle.INSTANCE.message("upload.file.server.success.message"),
+                                            DevServerBundle.INSTANCE.message("upload.file.server.title"),
                                             Messages.getInformationIcon()
                                     );
-                                    uploadLabel.setText("文件上传成功！");
+                                    uploadLabel.setText(DevServerBundle.INSTANCE.message("upload.file.server.success.message"));
                                 } else {
                                     Messages.showMessageDialog(
-                                            "文件上传失败！",
-                                            "Host",
+                                            DevServerBundle.INSTANCE.message("upload.file.server.error.message"),
+                                            DevServerBundle.INSTANCE.message("upload.file.server.title"),
                                             Messages.getInformationIcon()
                                     );
-                                    uploadLabel.setText("文件上传失败！");
+                                    uploadLabel.setText(DevServerBundle.INSTANCE.message("upload.file.server.error.message"));
                                 }
                             } catch (IOException exception) {
                                 Messages.showMessageDialog(
-                                        "文件上传失败！",
-                                        "Host",
+                                        DevServerBundle.INSTANCE.message("upload.file.server.error.message"),
+                                        DevServerBundle.INSTANCE.message("upload.file.server.title"),
                                         Messages.getErrorIcon()
                                 );
-                                uploadLabel.setText("文件上传失败！");
+                                uploadLabel.setText(DevServerBundle.INSTANCE.message("upload.file.server.error.message"));
                             }
 
                         } catch (Exception exception) {
                             Messages.showMessageDialog(
-                                    "文件上传失败！",
-                                    "Host",
+                                    DevServerBundle.INSTANCE.message("upload.file.server.error.message"),
+                                    DevServerBundle.INSTANCE.message("upload.file.server.title"),
                                     Messages.getErrorIcon()
                             );
-                            uploadLabel.setText("文件上传失败！");
+                            uploadLabel.setText(DevServerBundle.INSTANCE.message("upload.file.server.error.message"));
                         } finally {
                             // 关闭资源
                             if (session != null) try {
@@ -218,14 +218,14 @@ public class RunShellScript {
                 File file = FileUtil.getInstance().saveConfigPathExample("template" + File.separator + "shell", shellName, text);
                 if (file != null) {
                     Messages.showMessageDialog(
-                            "文件保存成功！",
-                            "Host",
+                            DevServerBundle.INSTANCE.message("save.file.success.message"),
+                            DevServerBundle.INSTANCE.message("save.file"),
                             Messages.getInformationIcon()
                     );
                 } else {
                     Messages.showMessageDialog(
-                            "文件保存失败！",
-                            "Host",
+                            DevServerBundle.INSTANCE.message("save.file.error.message"),
+                            DevServerBundle.INSTANCE.message("save.file"),
                             Messages.getErrorIcon()
                     );
 
@@ -294,7 +294,7 @@ public class RunShellScript {
         shellScript = new JBPanel();
         shellScript.setLayout(new BorderLayout(0, 0));
         panel1.add(shellScript, BorderLayout.CENTER);
-        shellScript.setBorder(BorderFactory.createTitledBorder(null, "shell脚本", TitledBorder.LEFT, TitledBorder.ABOVE_TOP, null, null));
+        shellScript.setBorder(BorderFactory.createTitledBorder(null, DevServerBundle.INSTANCE.message("shell.script"), TitledBorder.LEFT, TitledBorder.ABOVE_TOP, null, null));
     }
 
     /** @noinspection ALL */

@@ -18,6 +18,7 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons;
 import com.tanghui.dev.idea.plugin.devserver.ui.HorizontalScrollBarEditor;
@@ -108,7 +109,7 @@ public class BrowserPanel {
         JPanel panel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         List<AnAction> actions = new ArrayList<>();
-        AnAction back = new AnAction("后退", "", DevServerIcons.DevServer_TOOLBAR_TOAPI) {
+        AnAction back = new AnAction(DevServerBundle.INSTANCE.message("back"), "", DevServerIcons.DevServer_TOOLBAR_TOAPI) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 browser.getCefBrowser().goBack();
@@ -130,7 +131,7 @@ public class BrowserPanel {
                 return ActionUpdateThread.EDT;
             }
         };
-        AnAction forward = new AnAction("前进", "", DevServerIcons.DevServer_TOOLBAR_TOREQUEST) {
+        AnAction forward = new AnAction(DevServerBundle.INSTANCE.message("advance"), "", DevServerIcons.DevServer_TOOLBAR_TOREQUEST) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 browser.getCefBrowser().goForward();
@@ -153,7 +154,7 @@ public class BrowserPanel {
             }
         };
 
-        AnAction refresh = new AnAction("刷新", "", DevServerIcons.DevServer_RESTART) {
+        AnAction refresh = new AnAction(DevServerBundle.INSTANCE.message("refresh"), "", DevServerIcons.DevServer_RESTART) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 browser.getCefBrowser().reload();
@@ -176,7 +177,7 @@ public class BrowserPanel {
             }
         };
 
-        AnAction home = new AnAction("首页", "", DevServerIcons.DevServer_TOOLBAR_HOME) {
+        AnAction home = new AnAction(DevServerBundle.INSTANCE.message("home"), "", DevServerIcons.DevServer_TOOLBAR_HOME) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 // 设置启用的扩展
@@ -238,10 +239,10 @@ public class BrowserPanel {
             public void update(@NotNull AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
                 if (serverInfoShow) {
-                    presentation.setText("预览");
+                    presentation.setText(DevServerBundle.INSTANCE.message("preview"));
                     presentation.setIcon(DevServerIcons.DevServer_TOOLBAR_SHOW);
                 } else {
-                    presentation.setText("编辑");
+                    presentation.setText(DevServerBundle.INSTANCE.message("edit"));
                     presentation.setIcon(DevServerIcons.DevServer_TOOLBAR_UPDATE);
                 }
             }
@@ -262,14 +263,15 @@ public class BrowserPanel {
                 }
                 saveServerHost(hostModels);
                 NotificationGroupManager.getInstance().getNotificationGroup("DevServer.Plugin.Notification")
-                        .createNotification("服务器详情", "服务器详情保存成功", NotificationType.INFORMATION)
+                        .createNotification(DevServerBundle.INSTANCE.message("server.detail.title"),
+                                DevServerBundle.INSTANCE.message("server.detail.success"), NotificationType.INFORMATION)
                         .notify(project);
             }
 
             @Override
             public void update(@NotNull AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
-                presentation.setText("保存");
+                presentation.setText(DevServerBundle.INSTANCE.message("sql.field.type.mapper.save"));
                 presentation.setIcon(DevServerIcons.DevServer_SAVE);
             }
 

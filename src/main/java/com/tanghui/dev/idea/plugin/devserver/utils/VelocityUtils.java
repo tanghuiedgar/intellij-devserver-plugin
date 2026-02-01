@@ -1,5 +1,6 @@
 package com.tanghui.dev.idea.plugin.devserver.utils;
 
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
@@ -17,7 +18,7 @@ import java.util.Properties;
  */
 public class VelocityUtils {
     /**
-     * velocity配置
+     * velocity 配置
      */
     private static final Properties INIT_PROP;
 
@@ -57,7 +58,8 @@ public class VelocityUtils {
             velocityEngine.evaluate(velocityContext, stringWriter, "org.slf4j.Logger", template);
         } catch (Exception e) {
             // 将异常全部捕获，直接返回，用于写入模板
-            StringBuilder builder = new StringBuilder("在生成代码时，模板发生了如下语法错误：\n");
+            StringBuilder builder = new StringBuilder(DevServerBundle.INSTANCE.message("velocity.error.message"));
+            builder.append("\n");
             StringWriter writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
             builder.append(writer);

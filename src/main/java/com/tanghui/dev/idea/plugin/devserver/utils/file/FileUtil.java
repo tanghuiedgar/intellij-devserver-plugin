@@ -40,7 +40,7 @@ public class FileUtil {
     public String getFileContents(File file) {
         StringBuilder result = new StringBuilder();
         try {
-            // 构造一个BufferedReader类来读取文件
+            // 构造一个 BufferedReader类来读取文件
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
             String s;
             // 使用readLine方法，一次读一行
@@ -48,7 +48,7 @@ public class FileUtil {
                 result.append(System.lineSeparator()).append(s);
             }
             br.close();
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
         return result.toString();
     }
 
@@ -156,7 +156,7 @@ public class FileUtil {
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(content);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
         if (file.exists()) {
             return file;

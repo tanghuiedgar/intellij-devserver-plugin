@@ -17,9 +17,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.util.keyFMap.KeyFMap;
 import com.intellij.util.ui.JBUI;
+import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
 import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
 import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
 import com.tanghui.dev.idea.plugin.devserver.deploy.console.CustomExecutionConsole;
@@ -57,7 +56,7 @@ import java.util.concurrent.*;
 import static com.tanghui.dev.idea.plugin.devserver.utils.ServerHostTool.execStdout;
 
 /**
- * @BelongsPackage: com.tanghui.run
+ * @BelongsPackage: com.tanghui.dev.idea.plugin.devserver.deploy.run
  * @Author: 唐煇
  * @CreateTime: 2024-07-19 09:02
  * @Description: 描述类的主要功能和用途。
@@ -87,27 +86,16 @@ public class DevServerRunProfileState implements RunProfileState {
         if (!"execute".equals(upgradeType)) {
             // 升级或者上传文件
             String uploadFilePath = configuration.getUploadFile();
-            myConsoleViewHead.print("上传文件路径: \033[1;34m" + uploadFilePath + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
-            /*Path filePath = Paths.get(uploadFilePath);
-            long fileSizeInBytes;
-            try {
-                fileSizeInBytes = Files.size(filePath);
-                myConsoleViewHead.print("文件大小: \033[1;33m" + fileSizeInBytes + "\033[0m bytes", ConsoleViewContentType.NORMAL_OUTPUT);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }*/
+            myConsoleViewHead.print(DevServerBundle.INSTANCE.message("upload.file.path") + " \033[1;34m" + uploadFilePath + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
+
             // 计算文件md5值
             try {
                 // 创建一个文件对象
                 File file = new File(uploadFilePath);
-                // 计算文件的 MD5 值
-                // String checksum = FileUtil.getInstance().getFileChecksum(file);
-                // 打印结果
-                // myConsoleViewHead.print("文件md5值: \033[1;31m" + checksum + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
                 // 获取创建时间
                 // 根据文件的绝对路径获取Path
                 Path path = Paths.get(file.getAbsolutePath());
-                // 根据path获取文件的基本属性类
+                // 根据 path 获取文件的基本属性类
                 BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
                 // 从基本属性类中获取文件创建时间
                 FileTime fileTime = attrs.creationTime();
@@ -118,21 +106,20 @@ public class DevServerRunProfileState implements RunProfileState {
                 date.setTime(millis);
                 // 毫秒转成时间字符串
                 String time = dateFormat.format(date);
-                myConsoleViewHead.print("文件创建时间: \033[1;31m" + time + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
+                myConsoleViewHead.print(DevServerBundle.INSTANCE.message("file.creation.time") + " \033[1;31m" + time + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
             } catch (IOException ignored) {
             }
             SwingUtilities.invokeLater(() -> {
                 List<DevServerRunConfig> devServerRunConfigList = this.configuration.getRunConfigList();
                 if (CollectionUtils.isEmpty(devServerRunConfigList)) {
                     Messages.showMessageDialog(
-                            "服务器信息不能为空！",
+                            DevServerBundle.INSTANCE.message("server.info.check.message"),
                             "Host",
                             Messages.getErrorIcon()
                     );
                     return;
                 }
                 List<FileTransfer> fileTransferList = new ArrayList<>();
-                JTabbedPane uploadTabbedPane = new JBTabbedPane();
                 for (DevServerRunConfig devServerRunConfig : devServerRunConfigList) {
                     // 校验运行配置信息
                     if (!validateRunConfig(devServerRunConfig, configuration)) {
@@ -141,12 +128,12 @@ public class DevServerRunProfileState implements RunProfileState {
                     DevServerRunConsoleView myConsoleView = new DevServerRunConsoleView(project, devServerRunConfig);
                     myConsoleView.getConsoleView().attachToProcess(myProcessHandler);
                     JButton logButton = new JButton();
-                    logButton.setText("查看日志");
+                    logButton.setText(DevServerBundle.INSTANCE.message("view.log"));
                     logButton.setPreferredSize(JBUI.size(80, 30));
                     logButton.setForeground(new JBColor(new Color(19, 218, 5), new Color(19, 218, 5)));
                     logButton.setBorder(null);
                     JButton rollbackButton = new JButton();
-                    rollbackButton.setText("版本回退");
+                    rollbackButton.setText(DevServerBundle.INSTANCE.message("version.rollback.title"));
                     rollbackButton.setPreferredSize(JBUI.size(80, 30));
                     rollbackButton.setForeground(new JBColor(new Color(255, 181, 30), new Color(255, 181, 30)));
                     rollbackButton.setBorder(null);
@@ -177,11 +164,11 @@ public class DevServerRunProfileState implements RunProfileState {
                         public void callback() {
                             // 执行命令
                             ApplicationManager.getApplication().invokeAndWait(() -> {
-                                Task.Backgroundable task = new Task.Backgroundable(project, "执行后续命令") {
+                                Task.Backgroundable task = new Task.Backgroundable(project, DevServerBundle.INSTANCE.message("execute.follow-up.command")) {
                                     @Override
                                     public void run(@NotNull ProgressIndicator progressIndicator) {
                                         progressIndicator.setIndeterminate(true);
-                                        printToConsole(myConsoleView, "\033[1;34m后续操作(开始)\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
+                                        printToConsole(myConsoleView, "\033[1;34m" + DevServerBundle.INSTANCE.message("deploy.server.type.execute.command.start") + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
                                         // 执行后续命令
                                         // 创建连接
                                         SSHClient ssh = null;
@@ -191,13 +178,13 @@ public class DevServerRunProfileState implements RunProfileState {
                                         try {
                                             ssh = new SSHClient();
                                             ssh.addHostKeyVerifier(new PromiscuousVerifier());
-                                            ssh.connect(devServerRunConfig.getServerHost(), Integer.valueOf(devServerRunConfig.getServerPort()));
+                                            ssh.connect(devServerRunConfig.getServerHost(), Integer.parseInt(devServerRunConfig.getServerPort()));
                                             ssh.authPassword(devServerRunConfig.getServerUser(), devServerRunConfig.getServerPassword());
                                             session = ssh.startSession();
                                             // 工作目录
                                             String targetDirectory = devServerRunConfig.getTargetDirectory();
                                             // 获取服务器文件md5值
-                                            String md5File = execStdout(session, "echo -e \"服务器文件md5值: \\033[1;31m$(md5sum " + targetDirectory + "/" + fileName + "|cut -d ' ' -f1)\\033[0m\"");
+                                            String md5File = execStdout(session, "echo -e \"" + DevServerBundle.INSTANCE.message("server.file.md5.value") + " \\033[1;31m$(md5sum " + targetDirectory + "/" + fileName + "|cut -d ' ' -f1)\\033[0m\"");
                                             myConsoleView.print(md5File, ConsoleViewContentType.NORMAL_OUTPUT);
                                             shellSession = ssh.startSession();
                                             shell = shellSession.startShell();
@@ -254,15 +241,7 @@ public class DevServerRunProfileState implements RunProfileState {
                                                 outputStream.flush();
                                             } else {
                                                 // 执行命令
-                                                if (StringUtils.isNotBlank(devServerRunConfig.getShellScript())) {
-                                                    String[] lines = devServerRunConfig.getShellScript().split("\\n");
-                                                    for (String line : lines) {
-                                                        if (StringUtils.isNotBlank(line)) {
-                                                            outputStream.write(((line + "\n")).getBytes(StandardCharsets.UTF_8));
-                                                            outputStream.flush();
-                                                        }
-                                                    }
-                                                }
+                                                sendShellScript(outputStream, devServerRunConfig);
                                             }
                                             outputStream.write((("echo \"exit\"\n")).getBytes(StandardCharsets.UTF_8));
                                             outputStream.flush();
@@ -318,7 +297,7 @@ public class DevServerRunProfileState implements RunProfileState {
                                         }
 
                                         printToConsole(myConsoleView, "", ConsoleViewContentType.NORMAL_OUTPUT);
-                                        printToConsole(myConsoleView, "\033[1;34m后续操作(结束)\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
+                                        printToConsole(myConsoleView, "\033[1;34m" + DevServerBundle.INSTANCE.message("deploy.server.type.execute.command.finish") + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
 
                                         // 后续命令执行完成之后才能进行后续操作
                                         logButton.setEnabled(true);
@@ -346,7 +325,7 @@ public class DevServerRunProfileState implements RunProfileState {
                         @Override
                         public void stopTransfer() {
                             printToConsole(myConsoleView, "", ConsoleViewContentType.NORMAL_OUTPUT);
-                            printToConsole(myConsoleView, devServerRunConfig.getServerHost() + "  " + "\033[1;31m本次升级已经终止\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
+                            printToConsole(myConsoleView, devServerRunConfig.getServerHost() + "  " + "\033[1;31m" + DevServerBundle.INSTANCE.message("upgrade.terminated") + "\033[0m", ConsoleViewContentType.NORMAL_OUTPUT);
                             printToConsole(myConsoleView, "", ConsoleViewContentType.NORMAL_OUTPUT);
                             // 结束运行状态
                             long counted = fileTransferList.stream()
@@ -382,7 +361,7 @@ public class DevServerRunProfileState implements RunProfileState {
                                 fileTransfer.getStateButton().setEnabled(false);
                                 fileTransfer.getStartOverButton().setEnabled(false);
                                 fileTransfer.getEndButton().setEnabled(false);
-                                fileTransfer.getTimeLeftLabel().setText("已终止");
+                                fileTransfer.getTimeLeftLabel().setText(DevServerBundle.INSTANCE.message("terminated"));
                                 fileTransfer.getTimeLeftLabel().setFont(JBUI.Fonts.label());
                                 fileTransfer.getTimeLeftLabel().setForeground(new JBColor(new Color(205, 5, 5), new Color(205, 5, 5)));
                             }
@@ -407,7 +386,7 @@ public class DevServerRunProfileState implements RunProfileState {
                 List<DevServerRunConfig> devServerRunConfigList = this.configuration.getRunConfigList();
                 if (CollectionUtils.isEmpty(devServerRunConfigList)) {
                     Messages.showMessageDialog(
-                            "服务器信息不能为空！",
+                            DevServerBundle.INSTANCE.message("server.info.check.message"),
                             "Host",
                             Messages.getErrorIcon()
                     );
@@ -418,7 +397,7 @@ public class DevServerRunProfileState implements RunProfileState {
                     // 校验运行配置信息
                     if (StringUtils.isBlank(devServerRunConfig.getServerHost().trim())) {
                         Messages.showMessageDialog(
-                                "服务器ip不能为空！",
+                                DevServerBundle.INSTANCE.message("server.host.check.message"),
                                 "Host",
                                 Messages.getErrorIcon()
                         );
@@ -426,7 +405,7 @@ public class DevServerRunProfileState implements RunProfileState {
                     }
                     if (StringUtils.isBlank(devServerRunConfig.getServerPort().trim())) {
                         Messages.showMessageDialog(
-                                "服务器端口不能为空！",
+                                DevServerBundle.INSTANCE.message("server.port.check.message"),
                                 "Host",
                                 Messages.getErrorIcon()
                         );
@@ -434,7 +413,7 @@ public class DevServerRunProfileState implements RunProfileState {
                     }
                     if (StringUtils.isBlank(devServerRunConfig.getServerUser().trim())) {
                         Messages.showMessageDialog(
-                                "服务器用户名不能为空！",
+                                DevServerBundle.INSTANCE.message("server.user.check.message"),
                                 "Host",
                                 Messages.getErrorIcon()
                         );
@@ -442,7 +421,7 @@ public class DevServerRunProfileState implements RunProfileState {
                     }
                     if (StringUtils.isBlank(devServerRunConfig.getServerPassword().trim())) {
                         Messages.showMessageDialog(
-                                "服务器密码不能为空！",
+                                DevServerBundle.INSTANCE.message("server.password.check.message"),
                                 "Host",
                                 Messages.getErrorIcon()
                         );
@@ -450,7 +429,7 @@ public class DevServerRunProfileState implements RunProfileState {
                     }
                     if (StringUtils.isBlank(devServerRunConfig.getShellScript())) {
                         Messages.showMessageDialog(
-                                "运行脚本不能为空！",
+                                DevServerBundle.INSTANCE.message("server.run.script.check.message"),
                                 "Host",
                                 Messages.getErrorIcon()
                         );
@@ -461,10 +440,10 @@ public class DevServerRunProfileState implements RunProfileState {
                     myConsoleView.getConsoleView().attachToProcess(myProcessHandler);
 
                     JButton logButton = new JButton();
-                    logButton.setText("查看日志");
+                    logButton.setText(DevServerBundle.INSTANCE.message("view.log"));
                     logButton.setPreferredSize(JBUI.size(80, 30));
                     JButton rollbackButton = new JButton();
-                    rollbackButton.setText("版本回退");
+                    rollbackButton.setText(DevServerBundle.INSTANCE.message("version.rollback.title"));
                     rollbackButton.setPreferredSize(JBUI.size(80, 30));
                     myConsoleView.setLogButton(logButton);
                     myConsoleView.setRollbackButton(rollbackButton);
@@ -480,7 +459,7 @@ public class DevServerRunProfileState implements RunProfileState {
                     SSHClient ssh = null;
                     try {
                         ssh = pool.borrow();
-                        printToConsole(myConsoleView, "执行命令开始", ConsoleViewContentType.NORMAL_OUTPUT);
+                        printToConsole(myConsoleView, DevServerBundle.INSTANCE.message("deploy.server.type.execute.command.start"), ConsoleViewContentType.NORMAL_OUTPUT);
                         try (Session session = ssh.startSession();
                              Session.Shell shell = session.startShell()) {
                             OutputStream outputStream = shell.getOutputStream();
@@ -494,15 +473,7 @@ public class DevServerRunProfileState implements RunProfileState {
                             }
                             outputStream.write(("ll ./\n").getBytes(StandardCharsets.UTF_8));
                             outputStream.flush();
-                            if (StringUtils.isNotBlank(devServerRunConfig.getShellScript())) {
-                                String[] lines = devServerRunConfig.getShellScript().split("\\n");
-                                for (String line : lines) {
-                                    if (StringUtils.isNotBlank(line)) {
-                                        outputStream.write(((line + "\n")).getBytes(StandardCharsets.UTF_8));
-                                        outputStream.flush();
-                                    }
-                                }
-                            }
+                            sendShellScript(outputStream, devServerRunConfig);
                             outputStream.write((("echo \"exit\"\n")).getBytes(StandardCharsets.UTF_8));
                             outputStream.flush();
                             InputStream inputStream = shell.getInputStream();
@@ -527,7 +498,7 @@ public class DevServerRunProfileState implements RunProfileState {
                             }
                             executorService.shutdown();
                         }
-                        printToConsole(myConsoleView, "执行命令结束", ConsoleViewContentType.NORMAL_OUTPUT);
+                        printToConsole(myConsoleView, DevServerBundle.INSTANCE.message("deploy.server.type.execute.command.finish"), ConsoleViewContentType.NORMAL_OUTPUT);
                         // 后续命令执行完成之后才能点击操作按钮
                         logButton.setEnabled(true);
                         rollbackButton.setEnabled(true);
@@ -546,6 +517,18 @@ public class DevServerRunProfileState implements RunProfileState {
         return new DefaultExecutionResult(customExecutionConsole, myProcessHandler);
     }
 
+    private static void sendShellScript(OutputStream outputStream, DevServerRunConfig devServerRunConfig) throws IOException {
+        if (StringUtils.isNotBlank(devServerRunConfig.getShellScript())) {
+            String[] lines = devServerRunConfig.getShellScript().split("\\n");
+            for (String line : lines) {
+                if (StringUtils.isNotBlank(line)) {
+                    outputStream.write(((line + "\n")).getBytes(StandardCharsets.UTF_8));
+                    outputStream.flush();
+                }
+            }
+        }
+    }
+
     private void printToConsole(DevServerRunConsoleView myConsoleView, String message, @NotNull ConsoleViewContentType contentType) {
         ApplicationManager.getApplication().invokeAndWait(() -> {
             myConsoleView.print(message, contentType);
@@ -553,12 +536,12 @@ public class DevServerRunProfileState implements RunProfileState {
     }
 
     private boolean validateRunConfig(DevServerRunConfig devServerRunConfig, DevServerRunConfiguration configuration) {
-        if (isBlankAndAlert(devServerRunConfig.getServerHost(), "服务器ip不能为空！")) return false;
-        if (isBlankAndAlert(devServerRunConfig.getServerPort(), "服务器端口不能为空！")) return false;
-        if (isBlankAndAlert(devServerRunConfig.getServerUser(), "服务器用户名不能为空！")) return false;
-        if (isBlankAndAlert(devServerRunConfig.getServerPassword(), "服务器密码不能为空！")) return false;
-        if (isBlankAndAlert(devServerRunConfig.getTargetDirectory(), "上传服务器路径不能为空！")) return false;
-        return !isBlankAndAlert(configuration.getUploadFile(), "本地待上传文件路径不能为空！");
+        if (isBlankAndAlert(devServerRunConfig.getServerHost(), DevServerBundle.INSTANCE.message("server.host.check.message"))) return false;
+        if (isBlankAndAlert(devServerRunConfig.getServerPort(), DevServerBundle.INSTANCE.message("server.port.check.message"))) return false;
+        if (isBlankAndAlert(devServerRunConfig.getServerUser(), DevServerBundle.INSTANCE.message("server.user.check.message"))) return false;
+        if (isBlankAndAlert(devServerRunConfig.getServerPassword(), DevServerBundle.INSTANCE.message("server.password.check.message"))) return false;
+        if (isBlankAndAlert(devServerRunConfig.getTargetDirectory(), DevServerBundle.INSTANCE.message("server.target.directory.check.message"))) return false;
+        return !isBlankAndAlert(configuration.getUploadFile(), DevServerBundle.INSTANCE.message("server.upload.file.check.message"));
     }
 
     /**
