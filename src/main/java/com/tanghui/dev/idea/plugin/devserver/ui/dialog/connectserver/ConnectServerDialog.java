@@ -172,6 +172,7 @@ public class ConnectServerDialog extends DialogWrapper {
                         serverHostModel.setPassword(password);
                         serverHostModel.setServerGroupBy(connectServer.getServerGroupBy().getText());
                         serverHostModel.setEnvironment(connectServer.getDescribe().getText());
+                        serverHostModel.setOsType(connectServer.getOsType().getItem().toString());
                         isConnect = true;
                     } else {
                         connectServer.getFeedback().setText(DevServerBundle.INSTANCE.message("server.connect.error"));
@@ -187,7 +188,7 @@ public class ConnectServerDialog extends DialogWrapper {
         }.queue();
     }
 
-    private void onDeleteButton(){
+    private void onDeleteButton() {
         String host = this.connectServer.getServerHost().getText();
         if (StringUtils.isBlank(host)) {
             Messages.showMessageDialog(project, DevServerBundle.INSTANCE.message("server.host.check.message"),

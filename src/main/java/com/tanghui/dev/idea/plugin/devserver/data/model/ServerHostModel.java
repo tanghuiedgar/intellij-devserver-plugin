@@ -23,7 +23,8 @@ public class ServerHostModel implements Serializable {
     private String host = "";
     /**
      * 端口
-     * */
+     *
+     */
     private Integer port = 22;
     /**
      * 连接用户
@@ -35,23 +36,33 @@ public class ServerHostModel implements Serializable {
     private String password = "";
     /**
      * 路径
-     * */
+     *
+     */
     private String path = "";
 
     /**
      * 执行命令集合
-     * */
+     *
+     */
     private String command;
 
     /**
      * 服务器说明
-     * */
+     *
+     */
     private String serverInfo;
 
     /**
      * 所属分组
-     * */
+     *
+     */
     private String serverGroupBy;
+
+    /**
+     * 服务器类型
+     *
+     */
+    private String osType;
 
     public ServerHostModel() {
     }

@@ -44,10 +44,7 @@ import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.JBUI;
 import com.tanghui.dev.idea.plugin.devserver.DevServerBundle;
-import com.tanghui.dev.idea.plugin.devserver.data.model.FileTransferModel;
-import com.tanghui.dev.idea.plugin.devserver.data.model.OperateEnum;
-import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostFileModel;
-import com.tanghui.dev.idea.plugin.devserver.data.model.ServerHostModel;
+import com.tanghui.dev.idea.plugin.devserver.data.model.*;
 import com.tanghui.dev.idea.plugin.devserver.icons.DevServerIcons;
 import com.tanghui.dev.idea.plugin.devserver.pool.GlobalSshPoolManager;
 import com.tanghui.dev.idea.plugin.devserver.pool.SshConnectionPool;
@@ -414,10 +411,12 @@ public class RemoteServer implements Disposable {
             objects.forEach(v -> {
                 JSONObject serverHost = (JSONObject) v;
                 String serverGroupBy = serverHost.getString("serverGroupBy");
+                String osType = StringUtils.isNotBlank(serverHost.getString("osType")) ? serverHost.getString("osType") : "Linux";
                 if (StringUtils.isNotBlank(serverGroupBy)) {
                     ServerHostTreeNode treeNode = getServerHostTreeNode(serverGroupBy, defaultMutableTreeNode);
                     if (treeNode != null) {
-                        ServerHostTreeNode serverHostTreeNode = new ServerHostTreeNode(serverHost.getString("host"), DevServerIcons.DevServer_SERVER, true);
+                        ServerHostTreeNode serverHostTreeNode = new ServerHostTreeNode(serverHost.getString("host"),
+                                OsType.fromDisplayName(osType).getIcon(), true);
                         treeNode.add(serverHostTreeNode);
                         // 设置默认选择的节点
                         if (finalObjects.indexOf(v) == 0) {
@@ -425,7 +424,8 @@ public class RemoteServer implements Disposable {
                         }
                     }
                 } else {
-                    ServerHostTreeNode serverHostTreeNode = new ServerHostTreeNode(serverHost.getString("host"), DevServerIcons.DevServer_SERVER, true);
+                    ServerHostTreeNode serverHostTreeNode = new ServerHostTreeNode(serverHost.getString("host"),
+                            OsType.fromDisplayName(osType).getIcon(), true);
                     if (finalObjects.indexOf(v) == 0) {
                         serverHostTreeNodeTemp.set(serverHostTreeNode);
                     }
@@ -449,6 +449,7 @@ public class RemoteServer implements Disposable {
                     serverHostModel.setServerGroupBy(serverGroupBy);
                     serverHostModel.setCommand(command);
                     serverHostModel.setServerInfo(serverInfo);
+                    serverHostModel.setOsType(osType);
                     hostModels.add(serverHostModel);
                 }
             });
@@ -1221,7 +1222,9 @@ public class RemoteServer implements Disposable {
                                         fileTransfers.remove(uuid);
                                         refreshFileTransfersPanel(jPanel, fileTransfers, 400, 5);
                                         if (fileTransfers.isEmpty()) {
-                                            lastRight.getServerInfoTabbedPane().remove(3);
+                                            ApplicationManager.getApplication().invokeLater(() -> {
+                                                lastRight.getServerInfoTabbedPane().remove(3);
+                                            });
                                         }
                                         if (StringUtils.isNotBlank(finalRemoteFileName) && selectedRow < 0) {
                                             // 删除临时文件

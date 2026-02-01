@@ -76,4 +76,24 @@ public class DevServerIcons {
     public static final Icon DevServer_UPLOAD = IconLoader.getIcon("/icons/server/upload.svg", DevServerIcons.class);
 
     public static final Icon DevServer_QUERY = IconLoader.getIcon("/icons/server/query.svg", DevServerIcons.class);
+
+    // Linux 类型
+    public static final Icon DevServer_AlmaLinux = IconLoader.getIcon("/icons/linux/AlmaLinux.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_Amazon = IconLoader.getIcon("/icons/linux/Amazon.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_CentOS = IconLoader.getIcon("/icons/linux/CentOS.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_Debian = IconLoader.getIcon("/icons/linux/Debian.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_Kylin = IconLoader.getIcon("/icons/linux/Kylin.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_Linux = IconLoader.getIcon("/icons/linux/Linux.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_OpenSUSE = IconLoader.getIcon("/icons/linux/OpenSUSE.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_Rocky = IconLoader.getIcon("/icons/linux/Rocky.svg", DevServerIcons.class);
+
+    public static final Icon DevServer_Ubuntu = IconLoader.getIcon("/icons/linux/Ubuntu.svg", DevServerIcons.class);
+
 }

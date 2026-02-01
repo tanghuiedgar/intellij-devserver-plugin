@@ -12,7 +12,6 @@ import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 
 import static com.tanghui.dev.idea.plugin.devserver.utils.SizeFormatUtils.formatBinary;
 
